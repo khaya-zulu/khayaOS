@@ -1,0 +1,37 @@
+---
+    import dayjs from "dayjs"
+
+    const response = await fetch(`${import.meta.env.PUBLIC_BACKEND_API}/api/graphql`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            query: `
+                {
+                    config {
+                        location
+                        temperature
+                    }
+                }
+            `,
+        }),
+    })
+
+    const { config } = (await response.json()).data
+---
+
+<div class="flex justify-between">
+    <div class="flex gap-3">
+        <div class="text-sm">{dayjs().format('dddd, DD MMM')}</div>
+        <div class="text-sm">{config.temperature}<span class="text-primary">°</span> C {config.location}</div>
+    </div>
+     <div class="text-sm opacity-70">
+        Photo by <a 
+            href="https://unsplash.com/@jefferyho?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="border-b-2 border-gray-800 hover:border-primary pt-1 transition"
+        >
+            Jeffery Ho</a> on <a href="https://unsplash.com/s/photos/workspace?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash
+        </a>
+    </div>
+</div>

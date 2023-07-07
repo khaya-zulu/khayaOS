@@ -1,0 +1,71 @@
+---
+import Layout from "~/layouts/layout.astro"
+import CaretIcon from "~/components/icons/caret.astro"
+
+import { DocumentRenderer } from "~/layouts/document"
+
+export async function getStaticPaths() {
+    const { data: { notes } } = await fetch(
+        `${import.meta.env.PUBLIC_BACKEND_API}/api/graphql`,
+        {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+            query: `
+                {
+                    notes(where:{published:{equals:true}}) {
+                        id
+                        title
+                        description
+                        publishedAt
+                        content {
+                            document
+                        }
+                        slug
+                        cover {
+                            publicUrl
+                        }
+                    }
+                }
+            `,
+            }),
+        }
+    ).then((response) => response.json());
+
+    return notes.map((note: any) => ({
+        params: { slug: note.slug },
+        props: note
+    }))
+}
+
+const { title, description, cover, content } = Astro.props;
+---
+
+<Layout {...{ title }} active="note">
+    <div class="fixed pt-8 pb-4 w-full z-50 top-0 white-blur">
+        <a class="p-1 rounded-full bg-amber-200 inline-block" href="/notes">
+            <CaretIcon className="rotate-180 text-amber-800" size={12} />
+        </a>
+    </div>
+    <div class="max-w-2xl mx-auto flex flex-col w-full gap-5 mt-20">
+        <div class="relative w-full">
+            <img src={cover.publicUrl} alt="" class="rounded-md h-80 w-full object-cover">
+            <div class="absolute bottom-10 left-10 text-white">
+                <div class="text-2xl font-bold mb-3">{title}</div>
+                <div>{description}</div>
+            </div>
+        </div>
+        <div class="flex justify-between">
+            <div class="flex">
+                <div class="pr-2 shadow-sm bg-white">Typescript</div>
+                <div class="px-2 -ml-4 rounded-full shadow-sm border-l border-dashed bg-white">NodeJS</div>
+                <div class="px-2 -ml-4 rounded-full shadow-sm border-l border-dashed bg-white">React</div>
+            </div>
+            <div class="text-gray-500">21 May 2021</div>
+        </div>
+
+        <hr class="mb-4">
+
+        <DocumentRenderer document={content.document} />
+    </div>
+</Layout>

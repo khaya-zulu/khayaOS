@@ -1,0 +1,13 @@
+---
+import Layout from "~/layouts/layout.astro"
+
+import { Notes } from "~/layouts/notes"
+import Footer from "~/layouts/footer.astro"
+---
+      
+<Layout title="khayaOS &#8226; Explore" active="notes">
+    <div class="flex-1">
+		<Notes client:only="solid" />
+	</div>
+    <Footer />
+</Layout>

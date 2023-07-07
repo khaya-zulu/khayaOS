@@ -1,0 +1,153 @@
+---
+import Temperature from "./temperature.astro";
+
+import { Rocket } from "~/components/icons/rocket"
+import Briefcase from "~/components/icons/briefcase.astro";
+import ArrowCircle from "~/components/icons/arrow-circle.astro";
+import Books from "~/components/icons/books.astro"
+
+import Puzzle from "~/components/icons/puzzle.astro"
+
+import { SpotifyPlayer } from "~/components/player"
+
+import Mobile from "./mobile.astro";
+import { cn } from "~/lib/cn";
+
+export type Props = {
+	title: string;
+	active: typeof menuItems[number]["key"];
+}
+
+const { title, active = "careers" } = Astro.props as Props;
+
+const menuItems = [
+	{
+		label: "Careers",
+		path: "/",
+		key: "careers",
+		icon: Briefcase
+	},
+	{
+		label: "Projects",
+		path: "/projects",
+		key: "projects",
+		icon: Puzzle
+	},
+	// {
+	// 	label: "Notes",
+	// 	path: "/notes",
+	// 	key: "notes",
+	// 	icon: Notes
+	// }
+]
+---
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+		<meta property="og:image" content="https://res.cloudinary.com/khaya-zulu/image/upload/v1673126290/Screenshot_2023-01-07_at_23.18.02_s1grit.png" />
+		<meta property="og:description" content="Upshot: The final or eventual outcome or..." />
+		<meta property="og:title" content="KhayaOS" />
+	</head>
+	<body>
+		<!-- Mobile view -->
+		<div class="h-screen bg-white bg-grid p-10 md:hidden">
+			<div class="relative">
+				<div class="text-center flex justify-center gap-5">
+					<div class="text-italics">Loading...</div>
+					<div class="overflow-hidden">
+						<Rocket color="#273D59" size={18} />
+					</div>
+				</div>
+				<Mobile />
+			</div>
+		</div>
+		<!-- Desktop view -->
+		<div class="w-full hidden md:flex">
+			<div class={cn("h-screen w-60 p-10 sticky top-0 border border-[#DDD6CD]", active === "note" ? "shadow-sm": "shadow-xl")}>
+				<div class={cn("h-screen absolute top-0 left-0 w-full z-0 window-blur brightness-95")} />
+				<div class="relative">
+					<div class="rounded-xl border-b-2 border-[#DDD6CD] p-3 inline-block overflow-hidden">
+						<Rocket className="text-gray-600" size={18} />
+					</div>
+					<div class="my-10 flex flex-col gap-2">
+						{
+							menuItems.map((item) => (
+								<a 
+									href={item.path}
+									class={cn(
+										"flex gap-3 items-center cursor-pointer transition border border-transparent p-2 relative rounded-md",
+										active.includes(item.key) ? "border-[#DDD6CD] bg-white/10 shadow-2xl" : "hover:border-[#DDD6CD]"
+									)}
+								>
+									<item.icon />
+									<div>{item.label}</div>
+								</a>
+							))
+						}
+						<a
+							href="https://www.flushed.dev/u/khaya_was_taken"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="flex p-2 rounded-md gap-3 items-center cursor-pointer transition-all mt-5 group"
+						>
+							<Books className="transition-all group-hover:hidden" />
+							<ArrowCircle className="transition-all hidden group-hover:block" />
+							<div>Bookmarks</div>
+						</a>
+					</div>
+				</div>
+				<div class="absolute left-0 bottom-0 w-full p-10">
+					<SpotifyPlayer client:load />
+				</div>
+			</div>
+			<main 
+				class="min-h-screen flex flex-col gap-8 flex-1 px-10 py-8 2xl:py-10 2xl:gap-10"
+				class:list={{ "bg-white": active === "note" }}
+			>
+				{active !== "note" && <Temperature />}
+				<slot />
+				<div class="w-screen h-screen bg-black opacity-50 absolute left-0 top-0 modal hidden" style="z-index: 5;" />
+			</main>
+		</div>
+	</body>
+</html>
+<style is:global>
+	@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;700&display=swap');
+	* {
+		font-family: 'Titillium Web', sans-serif;
+	}
+
+	body {
+		background-attachment: fixed;
+		background-image: url("https://upshot.dev/workspace.jpg");
+		background-size: cover;
+    	background-position-y: 40%;
+	}
+
+	@layer {
+		.window-blur, .white-blur {
+			background: inherit;
+			backdrop-filter: blur(8px);
+
+			@apply bg-[#DDD6CD]/20;
+		}
+
+		.white-blur {
+			backdrop-filter: blur(8px);
+
+			@apply bg-white/60;
+		}
+
+		.steal-border {
+			background: linear-gradient(#fff, #fff) padding-box,
+			linear-gradient(to left bottom, rgb(199, 210, 254), rgb(71, 85, 105), rgb(199, 210, 254)) border-box;
+  			border: 2px solid transparent;
+		}
+	}
+</style>

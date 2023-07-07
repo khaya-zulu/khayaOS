@@ -1,0 +1,13 @@
+---
+import Layout from "~/layouts/layout.astro";
+
+import Footer from "~/layouts/footer.astro";
+import { Projects } from "~/layouts/projects";
+---
+
+<Layout title="khayaOS &#8226; Projects" active="projects">
+	<div class="flex-1">
+		<Projects client:only="solid" />
+	</div>
+	<Footer />
+</Layout>

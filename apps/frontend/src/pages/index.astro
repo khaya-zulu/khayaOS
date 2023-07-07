@@ -1,0 +1,15 @@
+---
+import Layout from '../layouts/layout.astro';
+import Footer from '~/layouts/footer.astro';
+
+import { Careers } from "~/layouts/careers"
+---
+
+<!-- https://www.youtube.com/watch?v=6mv0_jsWhoE -->
+
+<Layout title="khayaOS &#8226; Career" active="careers">
+	<div class="flex-1">
+		<Careers client:only="solid" />
+	</div>
+	<Footer />
+</Layout>

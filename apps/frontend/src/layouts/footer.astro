@@ -1,0 +1,48 @@
+---
+    import Twitter from "../components/icons/twitter.astro";
+    import Linkedin from "../components/icons/linkedin.astro";
+    import Github from "../components/icons/github.astro";
+
+    const { data } = await fetch(`${import.meta.env.PUBLIC_BACKEND_API}/api/graphql`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            query: `
+                {
+                    config {
+                        avatar {
+                            publicUrl
+                        }
+                        bio
+                        displayEmail
+                        displayName
+                        twitter
+                        github
+                        linkedin
+                    }
+                }
+            `,
+        }),
+    }).then((response) => response.json());
+---
+
+<!-- TODO: make this slide, from this view to notifications `npx khayaOS chat` -->
+<div class="flex mx-auto rounded-full py-2 px-8 gap-4 items-center shadow-xl window-blur">
+    <img src={data.config?.avatar?.publicUrl} class="rounded-full w-14 h-14">
+    <div>
+        <div>{data.config.displayName}</div>
+        <div class="text-sm w-60 truncate">
+            <span class="italic">Upshot:</span> {data.config?.bio}
+        </div>
+    </div>
+    
+    <a href={data.config?.twitter} target="_blank" rel="noopener noreferrer" class="rounded-xl bg-gradient-to-r from-primary50 to-primary100 text-primaryDark p-2 transition-all group overflow-hidden">
+        <Twitter className="group-hover:animate-flap" style="animation-fill-mode: forwards;"/>
+    </a>
+    <a href={data.config.linkedin} target="_blank" rel="noopener noreferrer" class="rounded-xl bg-gradient-to-r from-primary50 to-primary100 text-primaryDark p-2 transition-all group">
+        <Linkedin className="group-hover:animate-pulse" />
+    </a>
+    <a href={data.config.github} target="_blank" rel="noopener noreferrer" class="rounded-xl bg-gradient-to-r from-primary50 to-primary100 text-primaryDark p-2 transition-all group">
+        <Github className="group-hover:animate-float" />
+    </a>
+</div>

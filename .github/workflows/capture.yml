@@ -1,0 +1,19 @@
+name: Capture Snapshot
+
+on:
+  workflow_dispatch:
+
+env:
+  SNAPLET_SOURCE_DATABASE_URL: ${{ secrets.SNAPLET_SOURCE_DATABASE_URL }}
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v3
+      - name: Capture snapshot
+        uses: khaya-zulu/snaplet-capture-action@main
+        with:
+          destination-path: "/tmp/my-snapshot"
+          skip-share: true

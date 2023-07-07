@@ -1,0 +1,4 @@
+{
+  "projectId": "ckq46skzy358532hraos3ptc7p",
+  "targetDatabaseUrl": "postgresql://postgres@localhost:5432/keystone"
+}
