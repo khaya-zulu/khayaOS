@@ -1,4 +1,5 @@
 ---
+import { ViewTransitions } from "astro:transitions"
 import Temperature from "./temperature.astro";
 
 import { Rocket } from "~/components/icons/rocket"
@@ -53,6 +54,7 @@ const menuItems = [
 		<meta property="og:image" content="https://res.cloudinary.com/khaya-zulu/image/upload/v1673126290/Screenshot_2023-01-07_at_23.18.02_s1grit.png" />
 		<meta property="og:description" content="Upshot: The final or eventual outcome or..." />
 		<meta property="og:title" content="KhayaOS" />
+		<ViewTransitions />
 	</head>
 	<body>
 		<!-- Mobile view -->
@@ -84,6 +86,7 @@ const menuItems = [
 										"flex gap-3 items-center cursor-pointer transition border border-transparent p-2 relative rounded-md",
 										active.includes(item.key) ? "border-[#DDD6CD] bg-white/10 shadow-2xl" : "hover:border-[#DDD6CD]"
 									)}
+									transition:name={active.includes(item.key) ? "auto": item.key}
 								>
 									<item.icon />
 									<div>{item.label}</div>
