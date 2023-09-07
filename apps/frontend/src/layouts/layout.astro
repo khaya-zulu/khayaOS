@@ -80,17 +80,19 @@ const menuItems = [
 					<div class="my-10 flex flex-col gap-2">
 						{
 							menuItems.map((item) => (
-								<a 
-									href={item.path}
-									class={cn(
-										"flex gap-3 items-center cursor-pointer transition border border-transparent p-2 relative rounded-md",
-										active.includes(item.key) ? "border-[#DDD6CD] bg-white/10 shadow-2xl" : "hover:border-[#DDD6CD]"
-									)}
-									transition:name={active.includes(item.key) ? "auto": item.key}
-								>
-									<item.icon />
-									<div>{item.label}</div>
-								</a>
+								<div class="relative group">
+									<div 
+										class={cn(
+											"h-[42px] cursor-pointer transition border border-transparent relative rounded-md",
+											active.includes(item.key) ? "border-[#DDD6CD] bg-white/10 shadow-2xl" : "group-hover:border-[#DDD6CD]"
+										)}
+										transition:name={active.includes(item.key) ? "auto": item.key}
+									/>
+									<a href={item.path} class="absolute top-0 left-0 h-[42px] px-2 items-center flex gap-3">
+										<item.icon />
+										<div>{item.label}</div>
+									</a>
+								</div>
 							))
 						}
 						<a
