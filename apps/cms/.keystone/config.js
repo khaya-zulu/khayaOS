@@ -108,6 +108,20 @@ var getCurrentlyPlaying = async () => {
   }
 };
 
+// lib/cloudinary.ts
+var b64EncodeCloudinaryImage = async ({
+  version,
+  publicId,
+  format
+}) => {
+  const blurredUrl = `https://res.cloudinary.com/khaya-zulu/image/upload/w_100,q_auto,f_webp,e_blur:1000/v${version}/${publicId}`;
+  const resp = await fetch(blurredUrl);
+  const buffer = await resp.arrayBuffer();
+  return `data:image/${format};base64,${Buffer.from(buffer).toString(
+    "base64"
+  )}`;
+};
+
 // schema.ts
 var frontendPermissions = {
   operation: {
@@ -131,6 +145,7 @@ var lists = {
     isSingleton: true,
     fields: {
       avatar: cloudinary,
+      avatarBlurUrl: (0, import_fields.text)(),
       displayEmail: (0, import_fields.text)({
         validation: {
           match: {
@@ -168,6 +183,23 @@ var lists = {
           }
         })
       })
+    },
+    hooks: {
+      resolveInput: async ({ resolvedData, operation }) => {
+        if (operation === "create" || operation === "update" && !!resolvedData.avatar) {
+          const { avatar } = resolvedData;
+          const avatarBlurUrl = b64EncodeCloudinaryImage({
+            format: avatar._meta.format,
+            publicId: avatar._meta.public_id,
+            version: avatar._meta.version
+          });
+          return {
+            ...resolvedData,
+            avatarBlurUrl
+          };
+        }
+        return resolvedData;
+      }
     }
   }),
   User: (0, import_core.list)({
@@ -206,7 +238,26 @@ var lists = {
       dateFrom: (0, import_fields.timestamp)({ validation: { isRequired: true } }),
       dateTo: (0, import_fields.timestamp)(),
       cover: cloudinary,
+      // coverBlurUrl: text({ ui: { itemView: { fieldMode: "read" } } }),
+      coverBlurUrl: (0, import_fields.text)(),
       url: (0, import_fields.text)()
+    },
+    hooks: {
+      resolveInput: async ({ resolvedData, operation }) => {
+        if (operation === "create" || operation === "update" && !!resolvedData.cover) {
+          const { cover } = resolvedData;
+          const coverBlurUrl = b64EncodeCloudinaryImage({
+            format: cover._meta.format,
+            publicId: cover._meta.public_id,
+            version: cover._meta.version
+          });
+          return {
+            ...resolvedData,
+            coverBlurUrl
+          };
+        }
+        return resolvedData;
+      }
     }
   }),
   Project: (0, import_core.list)({
@@ -225,7 +276,25 @@ var lists = {
           [1, 1, 1]
         ]
       }),
-      cover: cloudinary
+      cover: cloudinary,
+      coverBlurUrl: (0, import_fields.text)()
+    },
+    hooks: {
+      resolveInput: async ({ resolvedData, operation }) => {
+        if (operation === "create" || operation === "update" && !!resolvedData.cover) {
+          const { cover } = resolvedData;
+          const coverBlurUrl = b64EncodeCloudinaryImage({
+            format: cover._meta.format,
+            publicId: cover._meta.public_id,
+            version: cover._meta.version
+          });
+          return {
+            ...resolvedData,
+            coverBlurUrl
+          };
+        }
+        return resolvedData;
+      }
     }
   }),
   Note: (0, import_core.list)({

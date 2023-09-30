@@ -52,9 +52,9 @@ export const SpotifyPlayer = () => {
   const [data] = createResource({}, fetchSpotify);
 
   return (
-    <Show when={!data.loading && data.latest && !data.error}>
+    <Show when={!data.loading && data.latest && !data.error && data().item}>
       <a
-        href={data()?.item.external_urls.spotify}
+        href={data()?.item?.external_urls.spotify}
         rel="noopener noreferrer"
         target="_blank"
       >
@@ -66,15 +66,15 @@ export const SpotifyPlayer = () => {
           >
             <div class="flex flex-1 items-center gap-2">
               <img
-                src={data()?.item.album.images[0].url}
+                src={data()?.item?.album.images[0].url}
                 alt="Song thumbnail"
-                class="h-10 w-10 rounded-full w-full object-cover border border-gray-300 group-hover:animate-recording"
+                class="h-10 w-10 rounded-full object-cover border border-gray-300 group-hover:animate-recording"
               />
               <div class="w-28 overflow-hidden">
-                <div class="font-semibold truncate">{data()?.item.name}</div>
+                <div class="font-semibold truncate">{data()?.item?.name}</div>
                 <div class="text-primary truncate">
                   {data()
-                    ?.item.artists.map((a) => a.name)
+                    ?.item?.artists.map((a) => a.name)
                     .join(", ")}
                 </div>
               </div>

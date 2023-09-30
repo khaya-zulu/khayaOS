@@ -27,6 +27,7 @@ const { data } = await fetch(
             cover {
               publicUrl
             }
+            coverBlurUrl
             index
         }
       }
@@ -44,6 +45,7 @@ type Career = {
   dateFrom: string;
   dateTo: string;
   cover: { publicUrl: string };
+  coverBlurUrl: string;
   index: number;
   url: string;
 };
@@ -64,6 +66,7 @@ export const Careers = () => {
             {...career}
             type="career"
             src={career.cover.publicUrl}
+            srcBlur={career.coverBlurUrl}
             index={idx()}
             onClose={() => setSelected(-1)}
             onOpen={() => setSelected(idx())}

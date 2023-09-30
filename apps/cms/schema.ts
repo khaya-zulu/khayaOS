@@ -16,6 +16,7 @@ import { cloudinary } from "./storage";
 import { graphql } from "@keystone-6/core";
 
 import { getCurrentlyPlaying } from "./lib/spotify";
+import { b64EncodeCloudinaryImage } from "./lib/cloudinary";
 
 type AccessType = ListConfig<Lists.Config.TypeInfo<any>>["access"];
 
@@ -43,6 +44,7 @@ export const lists: Lists = {
     isSingleton: true,
     fields: {
       avatar: cloudinary,
+      avatarBlurUrl: text(),
       displayEmail: text({
         validation: {
           match: {
@@ -84,6 +86,29 @@ export const lists: Lists = {
         }),
       }),
     },
+    hooks: {
+      resolveInput: async ({ resolvedData, operation }) => {
+        if (
+          operation === "create" ||
+          (operation === "update" && !!resolvedData.avatar)
+        ) {
+          const { avatar } = resolvedData;
+
+          const avatarBlurUrl = b64EncodeCloudinaryImage({
+            format: avatar._meta.format,
+            publicId: avatar._meta.public_id,
+            version: avatar._meta.version,
+          });
+
+          return {
+            ...resolvedData,
+            avatarBlurUrl,
+          };
+        }
+
+        return resolvedData;
+      },
+    },
   }),
   User: list({
     access: backendPermissions,
@@ -124,7 +149,32 @@ export const lists: Lists = {
       dateFrom: timestamp({ validation: { isRequired: true } }),
       dateTo: timestamp(),
       cover: cloudinary,
+      // coverBlurUrl: text({ ui: { itemView: { fieldMode: "read" } } }),
+      coverBlurUrl: text(),
       url: text(),
+    },
+    hooks: {
+      resolveInput: async ({ resolvedData, operation }) => {
+        if (
+          operation === "create" ||
+          (operation === "update" && !!resolvedData.cover)
+        ) {
+          const { cover } = resolvedData;
+
+          const coverBlurUrl = b64EncodeCloudinaryImage({
+            format: cover._meta.format,
+            publicId: cover._meta.public_id,
+            version: cover._meta.version,
+          });
+
+          return {
+            ...resolvedData,
+            coverBlurUrl,
+          };
+        }
+
+        return resolvedData;
+      },
     },
   }),
   Project: list({
@@ -144,6 +194,30 @@ export const lists: Lists = {
         ],
       }),
       cover: cloudinary,
+      coverBlurUrl: text(),
+    },
+    hooks: {
+      resolveInput: async ({ resolvedData, operation }) => {
+        if (
+          operation === "create" ||
+          (operation === "update" && !!resolvedData.cover)
+        ) {
+          const { cover } = resolvedData;
+
+          const coverBlurUrl = b64EncodeCloudinaryImage({
+            format: cover._meta.format,
+            publicId: cover._meta.public_id,
+            version: cover._meta.version,
+          });
+
+          return {
+            ...resolvedData,
+            coverBlurUrl,
+          };
+        }
+
+        return resolvedData;
+      },
     },
   }),
   Note: list({

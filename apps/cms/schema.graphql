@@ -4,6 +4,7 @@
 type Config {
   id: ID!
   avatar: CloudinaryImage_File
+  avatarBlurUrl: String
   displayEmail: String
   displayName: String
   bio: String
@@ -74,6 +75,7 @@ input ConfigWhereInput {
   OR: [ConfigWhereInput!]
   NOT: [ConfigWhereInput!]
   id: IDFilter
+  avatarBlurUrl: StringFilter
   displayEmail: StringFilter
   displayName: StringFilter
   bio: StringFilter
@@ -132,6 +134,7 @@ input NestedStringFilter {
 
 input ConfigOrderByInput {
   id: OrderDirection
+  avatarBlurUrl: OrderDirection
   displayEmail: OrderDirection
   displayName: OrderDirection
   bio: OrderDirection
@@ -150,6 +153,7 @@ enum OrderDirection {
 
 input ConfigUpdateInput {
   avatar: Upload
+  avatarBlurUrl: String
   displayEmail: String
   displayName: String
   bio: String
@@ -171,6 +175,7 @@ input ConfigUpdateArgs {
 
 input ConfigCreateInput {
   avatar: Upload
+  avatarBlurUrl: String
   displayEmail: String
   displayName: String
   bio: String
@@ -259,6 +264,7 @@ type Career {
   dateFrom: DateTime
   dateTo: DateTime
   cover: CloudinaryImage_File
+  coverBlurUrl: String
   url: String
 }
 
@@ -283,6 +289,7 @@ input CareerWhereInput {
   createdAt: DateTimeNullableFilter
   dateFrom: DateTimeFilter
   dateTo: DateTimeNullableFilter
+  coverBlurUrl: StringFilter
   url: StringFilter
 }
 
@@ -322,6 +329,7 @@ input CareerOrderByInput {
   createdAt: OrderDirection
   dateFrom: OrderDirection
   dateTo: OrderDirection
+  coverBlurUrl: OrderDirection
   url: OrderDirection
 }
 
@@ -335,6 +343,7 @@ input CareerUpdateInput {
   dateFrom: DateTime
   dateTo: DateTime
   cover: Upload
+  coverBlurUrl: String
   url: String
 }
 
@@ -353,6 +362,7 @@ input CareerCreateInput {
   dateFrom: DateTime
   dateTo: DateTime
   cover: Upload
+  coverBlurUrl: String
   url: String
 }
 
@@ -364,6 +374,7 @@ type Project {
   subTitle: String
   description: Project_description_Document
   cover: CloudinaryImage_File
+  coverBlurUrl: String
 }
 
 type Project_description_Document {
@@ -384,6 +395,7 @@ input ProjectWhereInput {
   published: BooleanFilter
   title: StringFilter
   subTitle: StringFilter
+  coverBlurUrl: StringFilter
 }
 
 input ProjectOrderByInput {
@@ -392,6 +404,7 @@ input ProjectOrderByInput {
   published: OrderDirection
   title: OrderDirection
   subTitle: OrderDirection
+  coverBlurUrl: OrderDirection
 }
 
 input ProjectUpdateInput {
@@ -401,6 +414,7 @@ input ProjectUpdateInput {
   subTitle: String
   description: JSON
   cover: Upload
+  coverBlurUrl: String
 }
 
 input ProjectUpdateArgs {
@@ -415,6 +429,7 @@ input ProjectCreateInput {
   subTitle: String
   description: JSON
   cover: Upload
+  coverBlurUrl: String
 }
 
 type Note {

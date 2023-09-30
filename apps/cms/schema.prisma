@@ -12,17 +12,18 @@ generator client {
 }
 
 model Config {
-  id           Int    @id
-  avatar       Json?
-  displayEmail String @default("")
-  displayName  String @default("")
-  bio          String @default("")
-  twitter      String @default("")
-  github       String @default("")
-  linkedin     String @default("")
-  latitude     String @default("")
-  longitude    String @default("")
-  location     String @default("")
+  id            Int    @id
+  avatar        Json?
+  avatarBlurUrl String @default("")
+  displayEmail  String @default("")
+  displayName   String @default("")
+  bio           String @default("")
+  twitter       String @default("")
+  github        String @default("")
+  linkedin      String @default("")
+  latitude      String @default("")
+  longitude     String @default("")
+  location      String @default("")
 }
 
 model User {
@@ -34,27 +35,29 @@ model User {
 }
 
 model Career {
-  id          String    @id @default(cuid())
-  index       Int?      @unique
-  published   Boolean   @default(false)
-  title       String    @default("")
-  subTitle    String    @default("")
-  description Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  createdAt   DateTime? @default(now())
-  dateFrom    DateTime
-  dateTo      DateTime?
-  cover       Json?
-  url         String    @default("")
+  id           String    @id @default(cuid())
+  index        Int?      @unique
+  published    Boolean   @default(false)
+  title        String    @default("")
+  subTitle     String    @default("")
+  description  Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  createdAt    DateTime? @default(now())
+  dateFrom     DateTime
+  dateTo       DateTime?
+  cover        Json?
+  coverBlurUrl String    @default("")
+  url          String    @default("")
 }
 
 model Project {
-  id          String  @id @default(cuid())
-  index       Int?    @unique
-  published   Boolean @default(false)
-  title       String  @default("")
-  subTitle    String  @default("")
-  description Json    @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  cover       Json?
+  id           String  @id @default(cuid())
+  index        Int?    @unique
+  published    Boolean @default(false)
+  title        String  @default("")
+  subTitle     String  @default("")
+  description  Json    @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  cover        Json?
+  coverBlurUrl String  @default("")
 }
 
 model Note {

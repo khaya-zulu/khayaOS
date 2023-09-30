@@ -9,5 +9,6 @@ module.exports = {
   },
   rules: {
     "react/no-children-prop": "off",
+    "@next/next/no-img-element": "off",
   },
 };

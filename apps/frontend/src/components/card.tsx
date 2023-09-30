@@ -1,12 +1,17 @@
 import { mergeProps } from "solid-js";
 import { Motion } from "@motionone/solid";
 
+import { Image } from "@unpic/solid";
+
 import { cn } from "~/lib/cn";
 import { DocumentRenderer, DocumentRendererProps } from "~/layouts/document";
+
+import { BlurrableImage } from "~/components/blurrable-image";
 
 type Props = {
   id: string;
   src: string;
+  srcBlur?: string;
   title: string;
   description: { document: DocumentRendererProps["document"] };
   index: number;
@@ -118,7 +123,7 @@ export const Card = (props: NoteProps | GeneralProps) => {
       >
         <Motion.div
           class={[
-            "h-full w-[25rem] group border border-gray-500 rounded-2xl relative overflow-hidden card bg-white",
+            "h-full w-[25rem] group border border-gray-500 rounded-2xl relative overflow-hidden card",
             props.type !== "note" && !props.selected
               ? "shadow-sm"
               : "shadow-2xl",
@@ -139,12 +144,24 @@ export const Card = (props: NoteProps | GeneralProps) => {
             },
           }}
         >
-          <img
+          <BlurrableImage
             src={props.src}
-            alt={props.title}
-            class={cn("object-cover h-full w-full brightness-[40%]")}
+            srcBlur={props.srcBlur ?? ""}
             alt={`${props.title} cover`}
+            layout="constrained"
+            width={400}
+            height={512}
+            class="object-cover brightness-[40%]"
           />
+          {/* <Image
+            src={props.srcBlur || props.src}
+            // src={props.src}
+            alt={`${props.title} cover`}
+            layout="constrained"
+            height={560}
+            width={400}
+            class="object-cover brightness-[40%]"
+          /> */}
           <div
             class={cn(
               "absolute top-0 left-0 w-full h-full overflow-y-auto",
@@ -154,7 +171,7 @@ export const Card = (props: NoteProps | GeneralProps) => {
             {props.type === "note" || !props.selected ? (
               <div class="w-full h-full window-blur bg-gradient-to-tr to-gray-600/60 from-gray-500/40 border border-gray-500 rounded-md p-8 text-white relative">
                 <b>{props.title}</b>
-                <div class="text-cyan-50">
+                <div class="text-cyan-50 truncate">
                   {props.type !== "note" && props.subTitle}
                 </div>
 
@@ -182,86 +199,6 @@ export const Card = (props: NoteProps | GeneralProps) => {
               </div>
             )}
           </div>
-          {/* <div class="absolute bottom-0 left-0 w-full p-5">
-            <div class="p-4 shadow-lg rounded-md w-full bg-white"></div>
-          </div> */}
-          {/* <div
-            class={[
-              "px-10 py-5 border-b border-gray-500 rounded-tr-md relative rounded-tl-md z-50 bg-gradient-to-r from-white to-gray-100 bg-grid flex justify-between items-center transition-all",
-              props.type !== "note" && props.selected
-                ? "shadow-sm"
-                : "shadow-xl",
-            ].join(" ")}
-          >
-            <div>
-              <div class="text-lg font-bold flex justify-between w-full">
-                {props.title}{" "}
-                <span class="text-gray-400 group-hover:text-gray-600 duration-300 transition-colors absolute right-10">
-                  {props.type === "note" && <>#{props.index + 1}</>}
-                  {props.type !== "note" && !props.selected && ":-"}
-                </span>
-              </div>
-              {props.type !== "note" && (
-                <Motion.div
-                  class="text-sm text-primary top-0 overflow-hidden"
-                  animate={{ height: props.selected ? 0 : "auto" }}
-                >
-                  {props.subTitle}
-                </Motion.div>
-              )}
-              {props.type === "note" && (
-                <div class="mt-5 text-gray-600 text-sm duration-300 border border-gray-300 group-hover:border-gray-400 inline-block py-1 px-3 rounded-sm">
-                  21 May 2012
-                </div>
-              )}
-            </div>
-            {props.type !== "note" && props.selected && (
-              <XCircle onClick={props.onClose} />
-            )}
-          </div>
-          <div class="h-full relative">
-            {props.type !== "note" && (
-              <div
-                classList={{
-                  "h-full bg-white relative": !props.selected,
-                }}
-              >
-                {props.selected && (
-                  <div class="bg-white top-0 left-0 w-full h-[27rem] space-y-5 px-10 py-5 overflow-auto leading-loose whitespace-pre-wrap">
-                    <DocumentRenderer document={props.description.document} />
-                  </div>
-                )}
-              </div>
-            )}
-
-            <Motion.div
-              class="overflow-hidden absolute z-0 h-full top-0 w-full"
-              animate={{
-                opacity:
-                  props.type !== "note" && props.selected && props.description
-                    ? 0
-                    : loaded()
-                    ? 1
-                    : 0,
-                display:
-                  props.type !== "note" && props.selected && props.description
-                    ? "none"
-                    : "block",
-              }}
-              transition={{
-                display: {
-                  duration: props.type !== "note" && props.selected ? 0.5 : 0,
-                },
-              }}
-            >
-              <img
-                src={props.src}
-                alt={props.title}
-                class={cn("object-cover h-full w-full")}
-                onLoad={() => setLoaded(true)}
-              />
-            </Motion.div>
-          </div> */}
         </Motion.div>
       </Motion.button>
     </>
