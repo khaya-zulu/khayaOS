@@ -44,7 +44,7 @@ export const lists: Lists = {
     isSingleton: true,
     fields: {
       avatar: cloudinary,
-      avatarBlurUrl: text(),
+      avatarBlurUrl: text({ ui: { itemView: { fieldMode: "read" } } }),
       displayEmail: text({
         validation: {
           match: {
@@ -149,8 +149,7 @@ export const lists: Lists = {
       dateFrom: timestamp({ validation: { isRequired: true } }),
       dateTo: timestamp(),
       cover: cloudinary,
-      // coverBlurUrl: text({ ui: { itemView: { fieldMode: "read" } } }),
-      coverBlurUrl: text(),
+      coverBlurUrl: text({ ui: { itemView: { fieldMode: "read" } } }),
       url: text(),
     },
     hooks: {
@@ -194,7 +193,7 @@ export const lists: Lists = {
         ],
       }),
       cover: cloudinary,
-      coverBlurUrl: text(),
+      coverBlurUrl: text({ ui: { itemView: { fieldMode: "read" } } }),
     },
     hooks: {
       resolveInput: async ({ resolvedData, operation }) => {

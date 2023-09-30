@@ -1,5 +1,5 @@
 ---
-    import { BlurrableImage } from "~/components/blurrable-image"
+    import { Image } from "astro:assets"
 
     import Twitter from "../components/icons/twitter.astro";
     import Linkedin from "../components/icons/linkedin.astro";
@@ -31,10 +31,9 @@
 
 <!-- TODO: make this slide, from this view to notifications `npx khayaOS chat` -->
 <div class="flex mx-auto rounded-full py-2 px-8 gap-4 items-center shadow-xl window-blur">
-    <BlurrableImage 
-        src={data.config?.avatar?.publicUrl} srcBlur={data.config?.avatarBlurUrl} height={56} width={56} class="rounded-full" 
-        client:only="solid"
-        alt="🔥"
+    <Image 
+        src={data.config?.avatar?.publicUrl} height={56} width={56} class="rounded-full w-14 h-14" 
+        alt="Avatar"
     />
     <div>
         <div>{data.config.displayName}</div>

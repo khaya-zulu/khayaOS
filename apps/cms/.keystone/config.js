@@ -145,7 +145,7 @@ var lists = {
     isSingleton: true,
     fields: {
       avatar: cloudinary,
-      avatarBlurUrl: (0, import_fields.text)(),
+      avatarBlurUrl: (0, import_fields.text)({ ui: { itemView: { fieldMode: "read" } } }),
       displayEmail: (0, import_fields.text)({
         validation: {
           match: {
@@ -238,8 +238,7 @@ var lists = {
       dateFrom: (0, import_fields.timestamp)({ validation: { isRequired: true } }),
       dateTo: (0, import_fields.timestamp)(),
       cover: cloudinary,
-      // coverBlurUrl: text({ ui: { itemView: { fieldMode: "read" } } }),
-      coverBlurUrl: (0, import_fields.text)(),
+      coverBlurUrl: (0, import_fields.text)({ ui: { itemView: { fieldMode: "read" } } }),
       url: (0, import_fields.text)()
     },
     hooks: {
@@ -277,7 +276,7 @@ var lists = {
         ]
       }),
       cover: cloudinary,
-      coverBlurUrl: (0, import_fields.text)()
+      coverBlurUrl: (0, import_fields.text)({ ui: { itemView: { fieldMode: "read" } } })
     },
     hooks: {
       resolveInput: async ({ resolvedData, operation }) => {
