@@ -23,6 +23,7 @@ const { data } = await fetch(
             publicUrl
           }
           index
+          coverBlurUrl
         }
       }
     `,
@@ -38,6 +39,7 @@ type Project = {
   cover: {
     publicUrl: string;
   };
+  coverBlurUrl: string;
   index: number;
 };
 
@@ -57,6 +59,7 @@ export const Projects = () => {
             {...project}
             type="project"
             src={project.cover?.publicUrl}
+            srcBlur={project.coverBlurUrl}
             index={idx()}
             onClose={() => setSelected(-1)}
             onOpen={() => setSelected(idx())}
