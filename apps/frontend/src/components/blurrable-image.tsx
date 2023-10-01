@@ -15,10 +15,7 @@ export const BlurrableImage = ({
     >
       <img
         src={srcBlur}
-        class={cn(
-          "absolute top-0 left-0 h-full transition-opacity delay-200",
-          props.class
-        )}
+        class={cn("absolute top-0 left-0 h-full", props.class)}
         height={props.height}
         width={props.width}
       />

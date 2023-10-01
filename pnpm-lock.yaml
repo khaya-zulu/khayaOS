@@ -39,6 +39,7 @@ importers:
       '@astrojs/tailwind': 5.0.0
       '@motionone/solid': 10.16.4
       '@types/lodash': 4.14.191
+      '@unpic/astro': 0.0.25
       '@unpic/solid': 0.0.29
       astro: 3.2.0
       clsx: 2.0.0
@@ -53,6 +54,7 @@ importers:
       '@astrojs/solid-js': 3.0.1_solid-js@1.7.12+vite@4.4.9
       '@astrojs/tailwind': 5.0.0_ncnrcbkqr56oahlx2ptlen744y
       '@motionone/solid': 10.16.4_solid-js@1.7.12
+      '@unpic/astro': 0.0.25_astro@3.2.0
       '@unpic/solid': 0.0.29_solid-js@1.7.12
       astro: 3.2.0
       clsx: 2.0.0
@@ -4077,6 +4079,15 @@ packages:
     dependencies:
       '@typescript-eslint/types': 5.60.1
       eslint-visitor-keys: 3.4.1
+    dev: false
+
+  /@unpic/astro/0.0.25_astro@3.2.0:
+    resolution: {integrity: sha512-rW1X6/eD2h8X4o6GQLx2kk3pClMzgZ4r2/FpyobENGMluANgEoUZLECCNL8GvxTchn5e7FSJA229FYg7mzuNow==}
+    peerDependencies:
+      astro: ^2.0.0 || ^3.0.0
+    dependencies:
+      '@unpic/core': 0.0.30
+      astro: 3.2.0
     dev: false
 
   /@unpic/core/0.0.30:
