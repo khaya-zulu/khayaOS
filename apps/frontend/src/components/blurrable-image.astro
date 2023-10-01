@@ -4,7 +4,7 @@
     const { src, srcBlur, height, width, className } = Astro.props
 ---
 
-<div class="relative inline-block" style={`height: ${height}px; width: ${width}px;`}>
+<div class="relative inline-block overflow-hidden" style={`height: ${height}px; width: ${width}px;`}>
     <img 
         src={srcBlur}
         class:list={["absolute top-0 left-0 h-full", className]}

@@ -1,7 +1,7 @@
 import { mergeProps } from "solid-js";
 import { Motion } from "@motionone/solid";
 
-import { Image } from "@unpic/solid";
+import dayjs from "dayjs";
 
 import { cn } from "~/lib/cn";
 import { DocumentRenderer, DocumentRendererProps } from "~/layouts/document";
@@ -153,15 +153,6 @@ export const Card = (props: NoteProps | GeneralProps) => {
             height={512}
             class="object-cover brightness-[40%]"
           />
-          {/* <Image
-            src={props.srcBlur || props.src}
-            // src={props.src}
-            alt={`${props.title} cover`}
-            layout="constrained"
-            height={560}
-            width={400}
-            class="object-cover brightness-[40%]"
-          /> */}
           <div
             class={cn(
               "absolute top-0 left-0 w-full h-full overflow-y-auto",
@@ -176,7 +167,7 @@ export const Card = (props: NoteProps | GeneralProps) => {
                 </div>
 
                 <div class="absolute bottom-0 pb-8 flex gap-4">
-                  21 days ago{" "}
+                  {dayjs(props.createdAt).format("DD MMM YY")}
                   <span>
                     {{ note: "🏷️", career: "💼", project: "🛠️" }[props.type]}
                   </span>
