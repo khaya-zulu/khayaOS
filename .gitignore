@@ -34,3 +34,4 @@ yarn-error.log*
 .turbo
 .snaplet/snapshots
 .snaplet/structure.d.ts
+.snaplet/snaplet.d.ts
