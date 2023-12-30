@@ -1,0 +1,33 @@
+---
+import { getCollection } from "astro:content"
+
+import Layout from '../layouts/layout.astro';
+import Footer from '~/layouts/footer.astro';
+
+import HorizontalList from "~/components/horizontal-list.astro"
+import Card from "~/components/card.astro"
+
+import Spotify from "~/components/spotify-card.astro"
+
+const music = await getCollection("music")
+---
+
+<Layout title="khayaOS &#8226; Bio" active="careers">
+	<div class="flex-1">
+		<HorizontalList>
+			<Spotify />
+			{
+				music.map((m, idx) => 
+					<Card 
+						idx={idx + 1} 
+						cover={m.data.cover} 
+						title={m.data.title} 
+						subtitle={m.data.subtitle} 
+						render={m.render}
+					/>
+				)
+			}
+		</HorizontalList>
+	</div>
+	<Footer />
+</Layout>

@@ -4,15 +4,13 @@ import Temperature from "./temperature.astro";
 
 import { Rocket } from "~/components/icons/rocket"
 import Briefcase from "~/components/icons/briefcase.astro";
-import ArrowCircle from "~/components/icons/arrow-circle.astro";
-import Books from "~/components/icons/books.astro"
 
 import Puzzle from "~/components/icons/puzzle.astro"
+import CardScript from "~/components/card-script.astro";
 
-import { SpotifyPlayer } from "~/components/player"
+import Sidebar from "~/components/sidebar.astro"
 
 import Mobile from "./mobile.astro";
-import { cn } from "~/lib/cn";
 
 export type Props = {
 	title: string;
@@ -34,12 +32,11 @@ const menuItems = [
 		key: "projects",
 		icon: Puzzle
 	},
-	// {
-	// 	label: "Notes",
-	// 	path: "/notes",
-	// 	key: "notes",
-	// 	icon: Notes
-	// }
+	{
+		label: "Notes",
+		path: "/notes",
+		key: "notes",
+	}
 ]
 ---
 
@@ -69,71 +66,62 @@ const menuItems = [
 				<Mobile />
 			</div>
 		</div>
+		<div class="absolute left-0 top-0 bg-black hidden opacity-0 h-full w-full z-30 bg-overlay" />
 		<!-- Desktop view -->
-		<div class="w-full hidden md:flex">
-			<div class={cn("h-screen w-60 p-10 sticky top-0 border border-[#DDD6CD]", active === "note" ? "shadow-sm": "shadow-xl")}>
-				<div class={cn("h-screen absolute top-0 left-0 w-full z-0 window-blur brightness-95")} />
-				<div class="relative">
-					<div class="rounded-xl border-b-2 border-[#DDD6CD] p-3 inline-block overflow-hidden">
-						<Rocket className="text-gray-600" size={18} />
-					</div>
-					<div class="my-10 flex flex-col gap-2">
-						{
-							menuItems.map((item) => (
-								<div class="relative group">
-									<div 
-										class={cn(
-											"h-[42px] cursor-pointer transition border border-transparent relative rounded-md",
-											active.includes(item.key) ? "border-[#DDD6CD] bg-white/10 shadow-2xl" : "group-hover:border-[#DDD6CD]"
-										)}
-										transition:name={active.includes(item.key) ? "auto": item.key}
-									/>
-									<a href={item.path} class="absolute top-0 left-0 h-[42px] w-full px-2 items-center flex gap-3">
-										<item.icon />
-										<div>{item.label}</div>
-									</a>
-								</div>
-							))
-						}
-						<a
-							href="https://www.flushed.dev/u/khaya_was_taken"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="flex p-2 rounded-md gap-3 items-center cursor-pointer transition-all mt-5 group"
-						>
-							<Books className="transition-all group-hover:hidden" />
-							<ArrowCircle className="transition-all hidden group-hover:block" />
-							<div>Bookmarks</div>
-						</a>
-					</div>
-				</div>
-				<div class="absolute left-0 bottom-0 w-full p-10">
-					<SpotifyPlayer client:load />
-				</div>
+		<div 
+			class:list={[
+				"w-full hidden md:flex",
+				active === "notes" && "bg-gradient-to-br from-black/10 to-black/20 backdrop-blur-lg"
+			]}
+		>
+			<div class="h-screen w-60 flex py-4 pl-4">
+				<Sidebar />
 			</div>
-			<main 
-				class="min-h-screen flex flex-col gap-8 flex-1 px-10 py-8 2xl:py-10 2xl:gap-10"
-				class:list={{ "bg-white": active === "note" }}
-			>
-				{active !== "note" && <Temperature />}
+			<main class:list={[
+				"min-h-screen flex flex-col gap-8 flex-1 2xl:py-10 2xl:gap-10",
+				active === "notes" ? "p-4" : "py-8"
+			]}>
+				{active !== "notes" && <Temperature />}
 				<slot />
-				<div class="w-screen h-screen bg-black opacity-50 absolute left-0 top-0 modal hidden" style="z-index: 5;" />
 			</main>
 		</div>
 	</body>
 </html>
 <style is:global>
-	@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;700&display=swap');
-	* {
-		font-family: 'Titillium Web', sans-serif;
+	@import url('https://fonts.googleapis.com/css2?family=Lato&family=ZCOOL+KuaiLe&display=swap');
+	body {
+		font-family: 'Lato', sans-serif;
 	}
 
+	.text-shadow {
+		text-shadow: 0.6px 0.6px 1px #adadad;
+	}
+
+	.text-zcool {
+		font-family: 'ZCOOL KuaiLe', sans-serif;
+	}
+
+	.gradient-background {
+		background-image: radial-gradient(circle at center, #ffffff 0%, #cccccc 50%, #bbbbbb 75%, #aaaaaa 100%);
+	}
+
+	.bg-metal {
+        /* background-image: url("https://www.transparenttextures.com/patterns/squared-metal.png"); */
+		background-image: url("https://www.transparenttextures.com/patterns/fake-brick.png");
+    }
+
+	.bg-paper {
+		background-image: url("https://www.transparenttextures.com/patterns/worn-dots.png");
+	}
+
+	.bg-rubber {
+        background-image: url("https://www.transparenttextures.com/patterns/rubber-grip.png");
+    }
+
 	body {
-		/* background-attachment: fixed; */
-		/* background-image: url("https://upshot.dev/workspace.jpg"); */
-		background-image: url("/workspace.jpg");
+		background-image: url("https://images.unsplash.com/photo-1526887593587-a307ea5d46b4?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
 		background-size: cover;
-    	background-position-y: 40%;
+    	background-position-y: 75%;
 	}
 
 	@layer {
@@ -142,7 +130,7 @@ const menuItems = [
 			backdrop-filter: blur(8px);
 			-webkit-backdrop-filter: blur(8px);
 
-			@apply bg-[#DDD6CD]/20;
+			@apply bg-[#DDD6CD]/40;
 		}
 
 		.white-blur {
@@ -157,3 +145,5 @@ const menuItems = [
 		}
 	}
 </style>
+
+<CardScript />

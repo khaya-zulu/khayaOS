@@ -14,7 +14,7 @@ export const HorizontalList = (props: Props) => {
       <div class="relative h-[32rem] overflow-hidden">
         <div
           class={[
-            "absolute top-0 whitespace-nowrap box-content w-full overflow-x-auto ",
+            "absolute top-0 whitespace-nowrap box-content w-full overflow-x-auto py-4",
             props.showOverlay ? "overflow-x-hidden" : "overflow-x-auto",
           ].join(" ")}
         >

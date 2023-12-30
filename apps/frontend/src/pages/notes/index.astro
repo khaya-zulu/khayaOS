@@ -1,13 +1,33 @@
 ---
-import Layout from "~/layouts/layout.astro"
+import { getCollection } from "astro:content"
 
-import { Notes } from "~/layouts/notes"
-import Footer from "~/layouts/footer.astro"
+import Layout from '../../layouts/layout.astro';
+
+
+import Footer from '~/layouts/footer.astro';
+
+import HorizontalList from "~/components/horizontal-list.astro"
+import Card from "~/components/card.astro"
+
+const notesCollection = await getCollection("notes")
 ---
-      
-<Layout title="khayaOS &#8226; Explore" active="notes">
-    <div class="flex-1">
-		<Notes client:only="solid" />
+
+<Layout title="khayaOS &#8226; Bio" active="careers">
+	<div class="flex-1">
+		<HorizontalList>
+			{
+				notesCollection.map((notes, idx) => 
+					<Card 
+						idx={idx} 
+						cover={notes.data.cover} 
+						title={notes.data.title} 
+						subtitle={notes.data.publishedAt.toString()} 
+                        href={`/notes/${notes.slug}`}
+						render={notes.render}
+					/>
+				)
+			}
+		</HorizontalList>
 	</div>
-    <Footer />
+	<Footer />
 </Layout>

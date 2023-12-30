@@ -3,6 +3,9 @@ module.exports = {
   content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
   theme: {
     extend: {
+      boxShadow: {
+        "steal-inner-shadow": "inset 0 2px 4px -2px rgba(0, 0, 0, 0.25)",
+      },
       keyframes: {
         launch: {
           "0%": { transform: "translateY(150%)" },

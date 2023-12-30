@@ -1,13 +1,30 @@
 ---
-import Layout from "~/layouts/layout.astro";
+import { getCollection } from "astro:content"
 
-import Footer from "~/layouts/footer.astro";
-import { Projects } from "~/layouts/projects";
+import Layout from '../layouts/layout.astro';
+import Footer from '~/layouts/footer.astro';
+
+import HorizontalList from "~/components/horizontal-list.astro"
+import Card from "~/components/card.astro"
+
+const projectCollection = await getCollection("project")
 ---
 
-<Layout title="khayaOS &#8226; Projects" active="projects">
+<Layout title="khayaOS &#8226; Bio" active="careers">
 	<div class="flex-1">
-		<Projects client:only="solid" />
+		<HorizontalList>
+			{
+				projectCollection.map((project, idx) => 
+					<Card 
+						idx={idx} 
+						cover={project.data.cover} 
+						title={project.data.title} 
+						techstack={project.data.tech}
+						render={project.render}
+					/>
+				)
+			}
+		</HorizontalList>
 	</div>
 	<Footer />
 </Layout>

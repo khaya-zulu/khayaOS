@@ -5,6 +5,15 @@
     import Linkedin from "../components/icons/linkedin.astro";
     import Github from "../components/icons/github.astro";
 
+    const config = {
+        avatar: "https://res.cloudinary.com/khaya-zulu/image/upload/w_112,h_112,c_lfill,f_auto/v1672771951/khayaOS/clcgl83dy0009parxey4pf6hg",
+        displayName: "Khaya Zulu",
+        bio: "Doing it for the fun of things.",
+        twitter: "https://www.linkedin.com/in/khaya-zulu-910760153/",
+        github: "https://github.com/khaya-zulu",
+        linkedin: "https://www.linkedin.com/in/khaya-zulu-910760153/"
+    }
+
     const { data } = await fetch(`${import.meta.env.PUBLIC_BACKEND_API}/api/graphql`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -30,7 +39,7 @@
 ---
 
 <!-- TODO: make this slide, from this view to notifications `npx khayaOS chat` -->
-<div class="flex mx-auto rounded-full py-2 px-8 gap-4 items-center shadow-xl window-blur">
+<div class="flex mx-auto rounded-full py-2 px-8 gap-4 items-center border-2 border-[#bfc1c3] shadow-xl window-blur">
     <BlurrableImage 
         src={data.config?.avatar?.publicUrl} 
         srcBlur={data.config?.avatarBlurUrl} 
@@ -40,19 +49,35 @@
         alt="Avatar"
     />
     <div>
-        <div>{data.config.displayName}</div>
+        <div>{config.displayName}</div>
         <div class="text-sm w-60 truncate">
-            <span class="italic">Upshot:</span>{" "}{data.config?.bio}
+            {config.bio}
         </div>
     </div>
     
-    <a href={data.config?.twitter} target="_blank" rel="noopener noreferrer" class="rounded-xl bg-gradient-to-r from-primary50 to-primary100 text-primaryDark p-2 transition-all group overflow-hidden">
-        <Twitter className="group-hover:animate-flap" style="animation-fill-mode: forwards;"/>
+    <a href={config.twitter} target="_blank" rel="noopener noreferrer" class="p-1 rounded-2xl shadow bg-gradient-to-r from-primary50 to-primary100">
+        <div class="rounded-xl p-2 transition-all group overflow-hidden deep-inner-shadow bg-black bg-rubber text-slate-100">
+            <Twitter className="group-hover:animate-flap" style="animation-fill-mode: forwards;"/>
+        </div>
     </a>
-    <a href={data.config.linkedin} target="_blank" rel="noopener noreferrer" class="rounded-xl bg-gradient-to-r from-primary50 to-primary100 text-primaryDark p-2 transition-all group">
-        <Linkedin className="group-hover:animate-pulse" />
+    <a href={config.linkedin} target="_blank" rel="noopener noreferrer" class="p-1 rounded-2xl shadow bg-gradient-to-r from-primary50 to-primary100">
+        <div class="rounded-xl p-2 transition-all group overflow-hidden deep-inner-shadow bg-black bg-rubber text-slate-100">
+            <Linkedin className="group-hover:animate-pulse" />
+        </div>
     </a>
-    <a href={data.config.github} target="_blank" rel="noopener noreferrer" class="rounded-xl bg-gradient-to-r from-primary50 to-primary100 text-primaryDark p-2 transition-all group">
-        <Github className="group-hover:animate-float" />
+    <a href={config?.github} target="_blank" rel="noopener noreferrer" class="p-1 rounded-2xl shadow bg-gradient-to-r from-primary50 to-primary100">
+        <div class="rounded-xl p-2 transition-all group overflow-hidden deep-inner-shadow bg-black bg-rubber text-slate-100">
+            <Github className="group-hover:animate-float" />
+        </div>
     </a>
 </div>
+
+<style>
+    .deep-inner-shadow {
+        box-shadow: inset 0 2px 4px -2px rgba(0, 0, 0, 0.25)
+    }
+
+    .bg-rubber {
+        background-image: url("https://www.transparenttextures.com/patterns/rubber-grip.png");
+    }
+</style>

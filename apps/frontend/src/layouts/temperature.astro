@@ -1,28 +1,16 @@
 ---
     import dayjs from "dayjs"
 
-    const response = await fetch(`${import.meta.env.PUBLIC_BACKEND_API}/api/graphql`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            query: `
-                {
-                    config {
-                        location
-                        temperature
-                    }
-                }
-            `,
-        }),
-    })
+    const coords = {lat: 26.2041, long: 28.0473}
+    const resp = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${coords.lat}&lon=${coords.long}&appid=${import.meta.env.OPEN_WEATHER_API_KEY}&units=metric`)
 
-    const { config } = (await response.json()).data
+    const { main: weather } = await resp.json()
 ---
 
-<div class="flex justify-between">
+<div class="flex justify-between px-10">
     <div class="flex gap-3">
         <div class="text-sm">{dayjs().format('dddd, DD MMM')}</div>
-        <div class="text-sm">{config.temperature}<span class="text-primary">°</span> C {config.location}</div>
+        <div class="text-sm">{weather.temp}<span class="text-primary">°</span> C Johannesburg, South Africa</div>
     </div>
      <div class="text-sm opacity-70">
         Photo by <a 

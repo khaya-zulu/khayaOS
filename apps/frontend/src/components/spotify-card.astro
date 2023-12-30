@@ -1,0 +1,105 @@
+---
+import Heart from "./icons/heart.astro"
+import PlayPause from "./icons/play-pause.astro"
+import PlayIcon from "./icons/play.astro"
+import ArrowUpRight from "./icons/arrow-up-right.astro"
+
+const resp = await fetch("http://localhost:4321/api/spotify")
+const data = await resp.json()
+
+const isEmpty = Object.keys(data).length === 0
+---
+
+{
+    !isEmpty ? <div 
+        class:list={[
+            "h-[27.5rem] w-[25rem] bg-white rounded-md group shadow-md border-white border-8 p-2 first:ml-10 relative inline-block align-top",
+            "hover:mr-20 transition-all duration-200 delay-0 group-hover:delay-150 group-hover:ease-out",
+        ]}
+    >
+        <div class="absolute left-0 top-0 bg-paper w-full h-full" />
+        <div class="w-full h-full z-[2] items-center flex  relative rounded-md bg-gradient-to-br from-[#DDD6CD]/20 to-white/30 border-2 border-white shadow-sm window-blur">
+            <div class="flex flex-col relative flex-1 z-[2]">
+                <img
+                    id="song-cover"
+                    src={data?.songCover}
+                    class:list={[
+                        "w-[5rem] h-[5rem] object-cover rounded-md transition-[filter] shadow mx-auto mb-4 shadow-md",
+                    ]}
+                    alt="cover image"
+                />
+                <div id="song-name" class="text-center text-zcool px-5 truncate w-2/3 mx-auto">{data?.songName}</div>
+                <div id="song-artists" class="text-center text-slate-700 truncate w-2/3 mx-auto">{data?.songArtists.join(", ")}</div>
+                <div class="w-2/3 mt-8 mx-auto">
+                    <div class="flex justify-between text-sm">
+                        <div id="progress" _progress={data?.progress} _isPlaying={data?.isPlaying} />
+                        <div id="duration" _duration={data?.duration} />
+                    </div>
+                    <div class="h-1 mt-2 rounded-full bg-slate-400 mx-auto">
+                        <div id="progress-bar" class="h-full w-0 rounded-full bg-slate-500"></div>
+                    </div>
+                </div>
+                <div class="flex gap-5 items-center justify-center mt-4">
+                    <Heart className="w-4 h-4" />
+                    <div class="flex gap-3 items-center">
+                        <PlayPause className="w-5 h-5 -scale-100 mt-1" />
+                        <div class="w-12 h-12 rounded-full bg-black flex items-center justify-center shadow-sm">
+                            <PlayIcon className="text-white" />
+                        </div>
+                        <PlayPause className="w-5 h-5" />
+                    </div>
+                    <ArrowUpRight className="w-4 h-4" />
+                </div>
+            </div>
+        </div>
+    </div> : <div class="w-24 inline-block" />
+}
+
+<script>
+    import { analogTime } from "~/lib/utils"
+    import { animateEl } from "~/lib/animate"
+
+    const elProgress = document.getElementById("progress")
+    const elDuration = document.getElementById("duration")
+    const elProgressBar = document.getElementById("progress-bar")
+
+    const elSongCover = document.getElementById("song-cover")
+    const elSongName = document.getElementById("song-name")
+    const elSongArtists = document.getElementById("song-artists")
+
+    if (elProgress && elDuration && elProgressBar && elSongCover && elSongName && elSongArtists) {
+        const duration = Number(elDuration?.getAttribute("_duration") ?? 0)
+        const isPlaying = elProgress?.getAttribute("_isPlaying") === "true"
+
+        console.log("isPlaying", isPlaying)
+
+        let progress = Number(elProgress?.getAttribute("_progress") ?? 0)
+
+        elProgress.innerHTML = `${analogTime(progress)}`
+        elDuration.innerHTML = `${analogTime(duration)}`
+
+        const updateUI = async () => {
+            const resp = await fetch("http://localhost:4321/api/spotify")
+            const data = await resp.json()
+
+            elSongCover.src = data?.songCover
+            elSongName.innerHTML = data?.songName
+            elSongArtists.innerHTML = data?.songArtists.join(", ")
+
+            elDuration.innerHTML = `${analogTime(data.duration)}`
+            progress = data.progress
+            elProgress.innerHTML = `${analogTime(progress)}`
+        }
+
+        setInterval(() => {
+            progress += 1000
+            elProgress.innerHTML = `${analogTime(progress)}`
+
+            if (progress >= duration) {
+                updateUI()
+            }
+        }, 1000)
+
+        animateEl(elProgressBar, { width: [`${(progress / duration) * 100}%`, "100%"] }, { duration: duration - progress })
+    }
+</script>

@@ -1,0 +1,151 @@
+---
+import type { CollectionEntry } from "astro:content"
+import ArrowUpRight from "~/components/icons/arrow-up-right.astro"
+import Fragment from "./fragment.astro"
+
+export type Props = {
+    idx: number
+    cover: string
+    title: string
+    subtitle?: string
+    techstack?: string[]
+    isClickDisabled?: boolean
+    href?: string
+    isExternalLink?: boolean
+    meta?: string
+    render: CollectionEntry<"bio">["render"]
+}
+
+const { idx, cover, title, subtitle, render, techstack, href, isExternalLink, isClickDisabled, meta } = Astro.props
+
+const { Content } = await render()
+
+const delayRules = "ease-out delay-0 group-hover:delay-300 group-hover:ease-out"
+
+const isLink = Boolean(href)
+const Component = isLink ? 'a' : "button"
+---
+
+<Component
+    class:list={[
+       "h-[27.5rem] w-[25rem] bg-white rounded-md group shadow-md border-white border-8 p-2 first:ml-10 relative inline-block card align-top",
+       "hover:mr-20 transition-all duration-200 delay-0 group-hover:delay-150 group-hover:ease-out z-10",
+       isLink && "click-disabled cursor-pointer"
+    ]}
+    id={`card-${idx}`}
+    style={`transform: translateX(${idx * -4}rem) rotate(${idx === 0 ? 0 : Math.floor(Math.random() * 3)}deg)`}
+    _isClicked={"0"}
+    _isClickDisabled={isLink || isClickDisabled}
+    _meta={meta}
+    href={isLink ? href : undefined}
+    target={isExternalLink ? "_blank" : undefined}
+    rel={isLink ? "noopener noreferrer" : undefined}
+    onclick="onClick(this)"
+>
+    <div class="absolute left-0 top-0 bg-paper w-full h-full z-[1]" />
+    <div class="flex flex-col card-content-container gap-4">
+        <div class="relative z-[2] h-[22rem] break-words rounded-md whitespace-normal overflow-hidden">
+            <div class="card-img overflow-hidden">
+                <img
+                    src={cover}
+                    class:list={[
+                        "w-full h-[22rem] object-cover rounded-md brightness-[0.3] group-hover:brightness-90 transition-[filter] card-img",
+                        "group-hover:-translate-y-4 transition-all",
+                        delayRules
+                    ]}
+                    alt="cover image"
+                />
+            </div>
+            <div class="card-content hidden opacity-0 px-1 text-left">
+                <Content />
+            </div>
+        </div>
+        <div class="px-1 z-[2] card-header">
+            <div
+                class:list={[
+                    "text-zcool rounded-lg group-hover:-translate-y-4 text-left transition-transform card-title",
+                    delayRules
+                ]}
+            >
+                {title}
+            </div>
+            {
+                subtitle ? <div 
+                    class:list={[
+                        "rounded-lg group-hover:opacity-100 opacity-0 transition group-hover:-translate-y-4 text-slate-700 card-subtitle",
+                        delayRules,
+                        href && "underline",
+                        "flex gap-2 items-center truncate"
+                    ]}
+                >
+                    {subtitle}
+                    {isLink && <ArrowUpRight className="w-[0.75rem] h-[0.75rem]" />}
+                </div> : null
+            }
+            {
+                techstack ? <div 
+                    class:list={[
+                        "rounded-lg group-hover:opacity-100 opacity-0 transition group-hover:-translate-y-4 text-slate-700 card-subtitle",
+                        delayRules,
+                        "flex gap-2 items-center mt-1"
+                    ]}
+                >
+                    {techstack.map(t => <img src={t} class="h-6 w-6" />)}
+                </div> : null
+            }
+        </div>
+    </div>
+</Component>
+
+<script>
+    import { animateEl, animateIn, animateOut, sleep } from "./card"
+
+    const overlay = document.querySelector(".bg-overlay")
+    overlay?.addEventListener("click", () => {
+        // @ts-ignore: todo add the type to window.
+        const idx = window.idx
+
+        const activeCard = document.getElementById(idx)
+        activeCard?.click()
+    })
+
+    // @ts-ignore create global function "onClick"
+    window.onClick = async (card: HTMLElement) => {
+        const isClickDisabled = card.getAttribute("_isClickDisabled")
+        if (isClickDisabled) return
+
+        const cardImage = card.querySelector(".card-img")
+        const cardContentContainer = card.querySelector(".card-content-container")
+        const cardHeader = card.querySelector(".card-header");
+        const cardSubtitle = card.querySelector(".card-subtitle")
+        const cardContent = card.querySelector(".card-content")
+
+        const isClicked = Boolean(+(card.getAttribute("_isClicked") ?? 0))
+        const id = card.getAttribute("id")
+
+        if (isClicked) {
+            await animateIn({ card, cardImage, cardContentContainer, cardHeader, cardSubtitle, cardContent })
+            animateEl(overlay, { opacity: 0 }, { duration: 400 }, async () => {
+                overlay?.classList.add("hidden")
+                card.setAttribute("_isClicked", "0")
+
+                card.classList.remove('z-50')
+                await sleep(100)
+                card?.classList.remove("mr-20");
+            })
+        } else {
+            card.classList.add("z-50")
+
+            await animateOut({ card, cardImage, cardContentContainer, cardHeader, cardSubtitle, cardContent })
+
+            // show the overlay
+            overlay?.classList.remove("hidden")
+            animateEl(overlay, { opacity: 0.5 }, { duration: 400, delay: 450 })
+
+            // @ts-ignore: todo add the type to window.
+            window.idx = id
+
+            card.setAttribute("_isClicked", "1")
+        }
+    }
+</script>

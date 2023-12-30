@@ -1,0 +1,156 @@
+---
+import { getCollection } from "astro:content"
+
+import Layout from '../layouts/layout.astro';
+import Footer from '~/layouts/footer.astro';
+
+import HorizontalList from "~/components/horizontal-list.astro"
+import Card from "~/components/card.astro"
+
+const travelCollection = await getCollection("travel")
+---
+
+<Layout title="khayaOS &#8226; Travel" active="careers">
+	<div class="flex-1">
+		<HorizontalList>
+			<div 
+				class:list={[
+					"h-[27.5rem] w-[25rem] bg-white rounded-md group shadow-md border-white border-8 p-2 first:ml-10 relative inline-block first-card align-top",
+					"hover:mr-20 transition-all duration-200 delay-0 group-hover:delay-150 group-hover:ease-out",
+				]}
+			>
+				<div class="absolute left-0 top-0 bg-paper w-full h-full" />
+				<div class="flex items-center justify-center h-full card-content-container gap-4 relative">
+					<div id="greetings" class="flex flex-col gap-6 items-center hidden">
+						<div class="flex flex-col gap-2 items-center">
+							<div id="greetings-text" class="text-zcool text-6xl" />
+							<div id="next-word" class="text-slate-500 text-sm" />
+						</div>
+
+						<div id="progress-layout" class="h-1 bg-slate-200 w-20 rounded-full overflow-hidden border border-slate-600">
+							<div id="progress" class="h-1 w-0 bg-slate-600" />
+						</div>
+					</div>
+					<div id="wishlist" class="flex flex-col gap-2">
+						<div class="text-zcool">Wishlist</div>
+
+						<div class="flex gap-2">
+							<input type="checkbox">
+							<div>Botswana 🇧🇼</div>
+						</div>
+						<div class="flex gap-2">
+							<input type="checkbox">
+							<div>Kenya 🇰🇪</div>
+						</div>
+						<div class="flex gap-2">
+							<input type="checkbox">
+							<div>Nigeria 🇳🇬</div>
+						</div>
+						<div class="flex gap-2">
+							<input type="checkbox">
+							<div>Rwanda 🇷🇼</div>
+						</div>
+						<div class="flex gap-2">
+							<input type="checkbox">
+							<div>Zambia 🇿🇲</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			{
+				travelCollection.map((travel, idx) => 
+					<Card 
+						idx={idx + 1} 
+						cover={travel.data.cover} 
+						title={travel.data.title} 
+						subtitle={travel.data.greetings[0]}
+						render={travel.render}
+						isClickDisabled
+						meta={travel.data.greetings.join(",")}
+					/>
+				)
+			}
+		</HorizontalList>
+	</div>
+	<Footer />
+</Layout>
+
+<script>
+	import { animateEl, sleep } from "../components/card"
+
+	const cards = document.querySelectorAll(".card")
+
+	const firstCard = document.querySelector(".first-card")
+	const wishlist = document.getElementById("wishlist")
+	const greetings = document.getElementById("greetings")
+	const greetingsText = document.getElementById("greetings-text")
+	const progress = document.getElementById("progress")
+	const progressLayout = document.getElementById("progress-layout")
+	const nextWord = document.getElementById("next-word")
+
+	cards.forEach((card) => {
+		card.addEventListener("mouseenter", async () => {
+			await sleep(250)
+
+			firstCard?.classList.add("mr-20")
+			wishlist?.classList.add("hidden")	
+
+			if (!greetings || !greetingsText || !progress || !nextWord) {
+				return
+			}
+
+			const meta = card.getAttribute("_meta") ?? "n/a"
+			
+			const intervalTime = 4500
+			const greetingsList = meta.split(",")
+
+			greetings?.classList.remove("hidden")
+			if (greetingsList.length <= 1) {
+				nextWord?.classList.add("hidden")
+				progressLayout?.classList.add("hidden")
+			}
+
+			let currentIndex = 0;
+
+			const updateText = () => {
+				if (greetingsList.length > 1) {
+					// reset progress bar
+					animateEl(progress, { width: "0%" }, { duration: 10 })
+				}
+
+				// flash greetings text
+				animateEl(greetingsText, { opacity: 0, transform: ["translateY(0)", "translateY(4px)"] }, {}, async () => {
+					greetingsText.innerHTML = greetingsList[currentIndex]
+					// increment index
+					currentIndex = currentIndex === greetingsList.length - 1 ? 0 : currentIndex + 1
+					nextWord.innerHTML = `<span class="mr-1">⤑</span> ${greetingsList[currentIndex]}`
+
+					// show greetings text again.
+					await sleep(150)
+					animateEl(greetingsText, { opacity: 1, transform: ["translateY(-4px)", "translateY(0)"] })
+				})
+
+				if (greetingsList.length > 1) {
+					animateEl(progress, { width: "100%" }, { duration: intervalTime })
+				}
+			}
+
+			updateText()
+			if (greetingsList.length > 1) {
+				// @ts-ignore
+				window.intervalId = setInterval(updateText, intervalTime)
+			}
+		})
+
+		card.addEventListener("mouseleave", () => {
+			firstCard?.classList.remove("mr-20")
+			wishlist?.classList.remove("hidden")
+			greetings?.classList.add("hidden")
+			progressLayout?.classList.remove("hidden")
+			nextWord?.classList.remove("hidden")
+
+			// @ts-ignore
+			clearInterval(window.intervalId)
+		})
+	})
+</script>

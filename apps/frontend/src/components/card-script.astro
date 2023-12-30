@@ -1,0 +1,28 @@
+<!-- <script>
+    import { animateIn, animateOut } from "./card"
+
+    const card = document.querySelectorAll(".card")
+
+    card.forEach((card) => {
+        const cardImage = card.querySelector(".card-img")
+        const cardContentContainer = card.querySelector(".card-content-container")
+        const cardHeader = card.querySelector(".card-header")
+        const cardSubtitle = card.querySelector(".card-subtitle")
+        const cardContent = card.querySelector(".card-content")
+
+        if (!card.classList.contains("click-disabled")) {
+            card?.addEventListener("click", () => {
+                console.log("clicked.")
+                const isClicked = card.getAttribute("_isClicked")
+
+                if (isClicked === "true") {
+                    animateIn({ card, cardImage, cardContentContainer, cardHeader, cardSubtitle, cardContent })
+                    card.setAttribute("_isClicked", "false")
+                } else {
+                    animateOut({ card, cardImage, cardContentContainer, cardHeader, cardSubtitle, cardContent })
+                    card.setAttribute("_isClicked", "true")
+                }
+            })
+        }
+    })
+</script>  -->
