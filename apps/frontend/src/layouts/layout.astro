@@ -1,12 +1,8 @@
 ---
 import { ViewTransitions } from "astro:transitions"
-import Temperature from "./temperature.astro";
 
-import { Rocket } from "~/components/icons/rocket"
 import Briefcase from "~/components/icons/briefcase.astro";
-
 import Puzzle from "~/components/icons/puzzle.astro"
-import CardScript from "~/components/card-script.astro";
 
 import Sidebar from "~/components/sidebar.astro"
 
@@ -14,30 +10,10 @@ import Mobile from "./mobile.astro";
 
 export type Props = {
 	title: string;
-	active: typeof menuItems[number]["key"];
+	active: "bio" | "projects" | "travel" | "music" | "notes"
 }
 
-const { title, active = "careers" } = Astro.props as Props;
-
-const menuItems = [
-	{
-		label: "Careers",
-		path: "/",
-		key: "careers",
-		icon: Briefcase
-	},
-	{
-		label: "Projects",
-		path: "/projects",
-		key: "projects",
-		icon: Puzzle
-	},
-	{
-		label: "Notes",
-		path: "/notes",
-		key: "notes",
-	}
-]
+const { title, active = "bio" } = Astro.props as Props;
 ---
 
 <!DOCTYPE html>
@@ -59,9 +35,6 @@ const menuItems = [
 			<div class="relative">
 				<div class="text-center flex justify-center gap-5">
 					<div class="text-italics">Loading...</div>
-					<div class="overflow-hidden">
-						<Rocket color="#273D59" size={18} />
-					</div>
 				</div>
 				<Mobile />
 			</div>
@@ -75,13 +48,13 @@ const menuItems = [
 			]}
 		>
 			<div class="h-screen w-60 flex py-4 pl-4">
-				<Sidebar />
+				<Sidebar active={active} />
 			</div>
 			<main class:list={[
 				"min-h-screen flex flex-col gap-8 flex-1 2xl:py-10 2xl:gap-10",
 				active === "notes" ? "p-4" : "py-8"
 			]}>
-				{active !== "notes" && <Temperature />}
+				<!-- {active !== "notes" && <Header />} -->
 				<slot />
 			</main>
 		</div>
@@ -92,6 +65,18 @@ const menuItems = [
 	body {
 		font-family: 'Lato', sans-serif;
 	}
+
+    li {
+        list-style-position: inside;
+    }
+
+    ul li {
+        list-style-type: disc;
+    }
+
+    ol li {
+        list-style-type: decimal;
+    }
 
 	.text-shadow {
 		text-shadow: 0.6px 0.6px 1px #adadad;
@@ -119,7 +104,8 @@ const menuItems = [
     }
 
 	body {
-		background-image: url("https://images.unsplash.com/photo-1526887593587-a307ea5d46b4?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+		/* background-image: url("https://images.unsplash.com/photo-1526887593587-a307ea5d46b4?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"); */
+		background-image: url("/space.jpg");
 		background-size: cover;
     	background-position-y: 75%;
 	}
@@ -135,7 +121,6 @@ const menuItems = [
 
 		.white-blur {
 			@apply bg-gradient-to-r from-white/10 to-white/0;
-			/* @apply bg-white/60 */
 		}
 
 		.steal-border {
@@ -145,5 +130,3 @@ const menuItems = [
 		}
 	}
 </style>
-
-<CardScript />

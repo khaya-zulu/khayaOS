@@ -1,8 +1,23 @@
 ---
 import Bolt from "./bolt.astro"
+import SidebarButton from "./sidebar-button.astro"
+
+export type Props = {
+    active: "bio" | "projects" | "travel" | "music" | "notes"
+}
+
+const menuItems = [
+    { href: "/", label: "bio" },
+    { href: "/projects", label: "projects" },
+    { href: "/travel", label: "travel" },
+    { href: "/music", label: "music" },
+    { href: "/notes", label: "notes" },
+]
+
+const { active } = Astro.props
 ---
 
-<div class="bg-gradient-to-br from-[#c2937f]/40 to-[#84807a]/40 rounded-md outline-offset-4 flex w-full">
+<div class="bg-gradient-to-br from-[#c2937f] to-[#84807a] rounded-md outline-offset-4 flex w-full">
     <div class="bg-[#ddd6cd]/50 border border-[#e5e7eb] rounded-md p-[2px] -translate-y-1 flex w-full">
         <div class="rounded-sm shadow-steal-inner-shadow border-t border-[#806153] bg-[#c2937f]/50 backdrop-blur-sm flex w-full">
             <div class="flex p-2 gap-2 w-full bg-metal">
@@ -11,13 +26,11 @@ import Bolt from "./bolt.astro"
                     <Bolt />
                 </div>
                 <div class="flex-1 flex flex-col gap-4 py-8">
-                    <!-- <img src="/bio.png" alt="" class="hover:scale-110 hover:rotate-2">
-                    <img src="/projects.png" alt="" class="hover:scale-110 hover:rotate-2"> -->
-                    <a href="/" onclick="window.postMessage('page_change')">bio</a>
-                    <a href="/projects" onclick="window.postMessage('page_change')">projects</a>
-                    <a href="/travel" onclick="window.postMessage('page_change')">travel</a>
-                    <a href="/music" onclick="window.postMessage('page_change')">music</a>
-                    <a href="/notes" onclick="window.postMessage('page_change')">notes</a>
+                    {
+                        menuItems.map(({ href, label }) => (
+                            <SidebarButton href={href} isActive={active === label}>{label}</SidebarButton>
+                        ))
+                    }
                 </div>
                 <div class="flex flex-col justify-between">
                     <Bolt />

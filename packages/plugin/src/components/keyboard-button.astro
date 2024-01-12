@@ -1,0 +1,82 @@
+---
+export type Props = {
+    key: string
+}
+
+const { key } = Astro.props
+---
+
+<button class="keyboard rounded-md outline-offset-4 text-sm" id={`keyboard-${key}`}>
+    <div class="rounded-md backdrop-blur-sm">
+        <slot />
+    </div>
+</button>
+
+<style>
+    .keyboard-yellow {
+        color: #b3a356;
+    }
+
+    .keyboard-active > div {
+        transform: translateY(-1.5px) !important;
+        background-color: #222222 !important;
+    }
+
+    .keyboard {
+        background-color: #222222;
+    }
+
+    .keyboard > div {
+        background-color: #333333;
+        border: 1px solid #555555;
+        transform: translateY(-3px);
+        color: #d9d9d9;
+        padding: 8px 12px;
+        transition: transform 0.1s ease-in-out;
+        transition: background-color 0.1s ease-in-out;
+    }
+</style>
+
+<script>
+    const keys: Record<string, HTMLElement | null> = {
+        shift: document.getElementById("keyboard-shift"),
+        t: document.getElementById("keyboard-t"),
+    }
+
+    let clicked = {
+        shift: false,
+        t: false
+    }
+
+    let isPlusShiftT = false
+
+    const elPlus = document.getElementById("plus-shift-t")
+
+    window.addEventListener("keydown", (e) => {
+        const key = e.key.toLowerCase()
+        const el = keys[key]
+        if (el) {
+            el.classList.add("keyboard-active")
+            clicked[key as keyof typeof clicked] = true
+
+            if (clicked.shift && clicked.t && !isPlusShiftT) {
+                elPlus?.classList.add("plus-shift-t")
+                window.dispatchEvent(new CustomEvent("toggle-scrollbar"))
+
+                isPlusShiftT = true
+            }
+        }
+    })
+
+    window.addEventListener("keyup", (e) => {
+        isPlusShiftT = false
+
+        elPlus?.classList.remove("plus-shift-t")
+        const key = e.key.toLowerCase()
+        const el = keys[key]
+        if (el) {
+            el.classList.remove("keyboard-active")
+            clicked[key as keyof typeof clicked] = false
+        }
+    })
+</script>

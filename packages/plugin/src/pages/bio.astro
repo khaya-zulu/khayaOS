@@ -1,0 +1,35 @@
+---
+import { getCollection } from "astro:content"
+
+import { sortByOrder } from "../lib/utils"
+
+import Layout from '../layouts/layout.astro';
+import Footer from '../layouts/footer.astro';
+
+import HorizontalList from "../components/horizontal-list.astro"
+import Card from "../components/card.astro"
+
+const bioCollection = await getCollection("bio")
+const ordered = bioCollection.sort(sortByOrder)
+---
+
+<Layout title="khayaOS &#8226; Bio" active="bio">
+	<div class="flex-1">
+		<HorizontalList>
+			{
+				ordered?.map((bio, idx) => 
+					<Card 
+						idx={idx} 
+						cover={bio.data.cover} 
+						title={bio.data.title} 
+						subtitle={bio.data.subtitle} 
+						href={bio.data.externalLink}
+						isExternalLink
+						render={bio.render}
+					/>
+				)
+			}
+		</HorizontalList>
+	</div>
+	<Footer />
+</Layout>

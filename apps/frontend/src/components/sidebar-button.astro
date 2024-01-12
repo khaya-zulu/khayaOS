@@ -1,0 +1,18 @@
+---
+export type Props = {
+    href: string
+    isActive: boolean
+}
+
+const { href, isActive } = Astro.props
+---
+
+<a class="relative group" href={href} onclick="window.postMessage('page_change')">
+    <img src="/tape.png" alt="tape" class="h-16 w-full group-hover:rotate-1">
+    <div class:list={[
+        "absolute h-16 top-0 left-0 w-full justify-center flex items-center text-zcool text-lg",
+        isActive && "text-white"
+    ]}>
+        <slot />
+    </div>
+</a>

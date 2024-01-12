@@ -1,0 +1,36 @@
+{
+  "name": "@khaya-os",
+  "main": "src/index.ts",
+  "version": "0.0.1",
+  "license": "MIT",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/khaya-zulu/changesaw.git"
+  },
+  "keywords": [
+    "changelog",
+    "astro"
+  ],
+  "author": "Khaya",
+  "bugs": {
+    "url": "https://github.com/khaya-zulu/changesaw/issues"
+  },
+  "homepage": "https://github.com/khaya-zulu/changesaw#readme",
+  "peerDependencies": {
+    "astro": "^4.0.8"
+  },
+  "devDependencies": {
+    "astro": "4.0.8",
+    "dayjs": "1.11.10",
+    "typescript": "latest"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./schema": "./src/schema.ts"
+  }
+}

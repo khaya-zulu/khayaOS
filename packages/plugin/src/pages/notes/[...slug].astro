@@ -1,0 +1,50 @@
+---
+export const prerender = true
+
+import Layout from "../../layouts/layout.astro"
+import CaretIcon from "../../components/icons/caret.astro"
+
+import { getCollection, type CollectionEntry } from "astro:content"
+
+export async function getStaticPaths() {
+    const notes = await getCollection("notes")
+
+    return notes.map((note: any) => ({
+        params: { slug: note.slug },
+        props: note
+    }))
+}
+
+export type Props = CollectionEntry<"notes">
+
+const { data, render } = Astro.props;
+
+const { Content } = await render();
+---
+
+<Layout {...{ title: data.title }} active="note-id">
+    <div class="h-full bg-white rounded mb-1 border-[3px] flex gap-6 border-[#e5e7eb] p-10 w-full">
+        <div class="flex-1">
+            <div>
+                <a class="inline-block" href="/notes">
+                    <div class="mb-4 border border-slate-300/80 flex px-3 gap-1 py-1 text-sm items-center text-slate-600 rounded-full">
+                        <CaretIcon className="w-3 h-3 -scale-100" />
+                        <span>notes</span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="text-zcool mb-2">The Cultural Significance of Greenhouses</div>
+            <div class="text-sm text-slate-600">21 May 2021</div>
+
+            <img src={data.cover} class="h-36 w-5/6 rounded object-cover mt-8 shadow-sm" />
+        </div>
+        <div class:list={[
+            "w-[34rem] flex flex-col gap-6",
+            data.isPreview && "blur-lg"
+        ]}>
+            <Content />
+        </div>
+        <div class="flex-1" />
+    </div>
+</Layout>

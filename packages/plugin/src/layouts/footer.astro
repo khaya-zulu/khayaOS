@@ -1,0 +1,73 @@
+---
+    import Twitter from "../components/icons/twitter.astro";
+    import Linkedin from "../components/icons/linkedin.astro";
+    import Github from "../components/icons/github.astro";
+
+    import RubberGrip from "../assets/rubber-grip.png";
+
+    import { user } from "virtual:os/user-config"
+---
+
+<div class="flex mx-auto rounded-full py-2 px-8 gap-4 items-center border-2 footer footer-blur shadow-xl">
+    <img src={user.avatar} alt="avatar" class="w-14 h-14 rounded-full">
+    <div>
+        <div>{user.name}</div>
+        <div class="text-sm w-60 truncate">
+            {user.description}
+        </div>
+    </div>
+    
+    {
+        user.socials?.twitter ? <>
+            <a href={user.socials.twitter} target="_blank" rel="noopener noreferrer" class="p-1 rounded-2xl shadow footer-icon">
+                <div class="rounded-xl p-2 transition-all group overflow-hidden deep-inner-shadow text-slate-100" style={`background-image: url("${RubberGrip.src}")`}>
+                    <Twitter className="group-hover:animate-flap" style="animation-fill-mode: forwards;"/>
+                </div>
+            </a>
+        </> : null
+    }
+    {
+        user.socials?.github ? <>
+            <a href={user.socials.github} target="_blank" rel="noopener noreferrer" class="p-1 rounded-2xl shadow footer-icon">
+                <div class="rounded-xl p-2 transition-all group overflow-hidden deep-inner-shadow text-slate-100" style={`background-image: url("${RubberGrip.src}")`}>
+                    <Linkedin className="group-hover:animate-pulse" />
+                </div>
+            </a>
+        </> : null
+    }
+    {
+        user.socials?.linkedin ? <>
+            <a href={user.socials.linkedin} target="_blank" rel="noopener noreferrer" class="p-1 rounded-2xl shadow footer-icon">
+                <div class="rounded-xl p-2 transition-all group overflow-hidden deep-inner-shadow text-slate-100" style={`background-image: url("${RubberGrip.src}")`}>
+                    <Github className="group-hover:animate-float" />
+                </div>
+            </a>
+        </> : null
+    }
+</div>
+
+<style>
+    .deep-inner-shadow {
+        box-shadow: inset 0 2px 4px -2px rgba(0, 0, 0, 0.25)
+    }
+
+    .footer {
+        border: 2px solid var(--os-footer-border-color);
+        color: var(--os-footer-text-color);
+    }
+
+    .footer-blur {
+        background: inherit;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        background-color: var(--os-footer-background-color);
+	}
+
+    .footer-icon {
+        background-image: linear-gradient(to right, var(--os-footer-icon-border-from), var(--os-footer-icon-border-from));
+    }
+
+    .footer-icon > div {
+        background-color: var(--os-footer-icon-background-color);
+    }
+</style>

@@ -1,0 +1,25 @@
+---
+export type Props = {
+    src: string;
+    alt: string;
+    index: number;
+}
+
+const { src, alt, index = 0 } = Astro.props
+---
+
+<img 
+    src={src}
+    alt={alt} 
+    style={`rotate: ${Math.floor(Math.random() * 3)}deg; transform: translateX(-${index * 30}px); height: 300px; width: 450px`} />
+
+<style>
+    img {
+        display: inline-block;
+        border-radius: 6px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        object-fit: cover;
+        border: 4px solid #c0c2c7;
+        vertical-align: top;
+    }
+</style>

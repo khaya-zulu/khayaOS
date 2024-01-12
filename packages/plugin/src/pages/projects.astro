@@ -1,0 +1,33 @@
+---
+import { getCollection } from "astro:content"
+
+import Layout from '../layouts/layout.astro';
+import Footer from '../layouts/footer.astro';
+
+import { sortByOrder } from "../lib/utils"
+
+import HorizontalList from "../components/horizontal-list.astro"
+import Card from "../components/card.astro"
+
+const projectCollection = await getCollection("project")
+const orders = projectCollection.sort(sortByOrder)
+---
+
+<Layout title="khayaOS &#8226; Bio" active="projects">
+	<div class="flex-1">
+		<HorizontalList>
+			{
+				orders?.map((project, idx) => 
+					<Card 
+						idx={idx} 
+						cover={project.data.cover} 
+						title={project.data.title} 
+						techstack={project.data.tech}
+						render={project.render}
+					/>
+				)
+			}
+		</HorizontalList>
+	</div>
+	<Footer />
+</Layout>

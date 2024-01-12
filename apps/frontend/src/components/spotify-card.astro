@@ -2,6 +2,7 @@
 import Heart from "./icons/heart.astro"
 import PlayPause from "./icons/play-pause.astro"
 import PlayIcon from "./icons/play.astro"
+import PauseIcon from "./icons/pause.astro"
 import ArrowUpRight from "./icons/arrow-up-right.astro"
 
 const resp = await fetch("http://localhost:4321/api/spotify")
@@ -28,8 +29,8 @@ const isEmpty = Object.keys(data).length === 0
                     ]}
                     alt="cover image"
                 />
-                <div id="song-name" class="text-center text-zcool px-5 truncate w-2/3 mx-auto">{data?.songName}</div>
-                <div id="song-artists" class="text-center text-slate-700 truncate w-2/3 mx-auto">{data?.songArtists.join(", ")}</div>
+                <div id="song-name" class="text-center text-zcool px-5 truncate w-60 mx-auto">{data?.songName}</div>
+                <div id="song-artists" class="text-center text-slate-700 truncate w-60 mx-auto">{data?.songArtists.join(", ")}</div>
                 <div class="w-2/3 mt-8 mx-auto">
                     <div class="flex justify-between text-sm">
                         <div id="progress" _progress={data?.progress} _isPlaying={data?.isPlaying} />
@@ -44,7 +45,7 @@ const isEmpty = Object.keys(data).length === 0
                     <div class="flex gap-3 items-center">
                         <PlayPause className="w-5 h-5 -scale-100 mt-1" />
                         <div class="w-12 h-12 rounded-full bg-black flex items-center justify-center shadow-sm">
-                            <PlayIcon className="text-white" />
+                            {data?.isPlaying ? <PauseIcon className="text-white w-6 h-6" /> : <PlayIcon className="text-white" />}
                         </div>
                         <PlayPause className="w-5 h-5" />
                     </div>
@@ -69,9 +70,6 @@ const isEmpty = Object.keys(data).length === 0
 
     if (elProgress && elDuration && elProgressBar && elSongCover && elSongName && elSongArtists) {
         const duration = Number(elDuration?.getAttribute("_duration") ?? 0)
-        const isPlaying = elProgress?.getAttribute("_isPlaying") === "true"
-
-        console.log("isPlaying", isPlaying)
 
         let progress = Number(elProgress?.getAttribute("_progress") ?? 0)
 

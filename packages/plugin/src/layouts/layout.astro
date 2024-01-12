@@ -1,0 +1,91 @@
+---
+import Header from "./header.astro";
+import Sidebar from "../components/sidebar.astro"
+
+import Mobile from "./mobile.astro";
+
+import "virtual:os/css"
+
+import { page } from "virtual:os/page"
+
+import "../tailwind.css"
+
+export type Props = {
+	title: string;
+	active: "bio" | "projects" | "travel" | "music" | "notes" | "note-id"
+}
+
+const { title, active = "bio" } = Astro.props as Props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type={page?.faviconType} href={page?.faviconPath} />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+		<meta property="og:image" content={page?.ogImage} />
+		<meta property="og:description" content={page?.ogDescription} />
+		<meta property="og:title" content={page?.ogTitle} />
+	</head>
+	<body>
+		<!-- Mobile view -->
+		<div class="h-screen bg-white bg-grid p-10 md:hidden">
+			<div class="relative">
+				<div class="text-center flex justify-center gap-5">
+					<div class="text-italics">Loading...</div>
+				</div>
+				<Mobile />
+			</div>
+		</div>
+		<div class="absolute left-0 top-0 bg-black hidden opacity-0 h-full w-full z-30 bg-overlay" />
+		<!-- Desktop view -->
+		<div 
+			class:list={[
+				"w-full hidden md:flex",
+				active === "note-id" && "bg-gradient-to-br from-black/10 to-black/20 backdrop-blur-lg"
+			]}
+		>
+			<div class="h-screen w-60 flex py-4 pl-4">
+				<Sidebar active={active} />
+			</div>
+			<main class:list={[
+				"min-h-screen flex flex-col gap-8 flex-1 2xl:py-10 2xl:gap-10",
+				active === "note-id" ? "p-4" : "py-8"
+			]}>
+				{active !== "note-id" ? <Header /> : null}
+				<slot />
+			</main>
+		</div>
+	</body>
+</html>
+<style is:global>
+	@import url('https://fonts.googleapis.com/css2?family=Lato&family=ZCOOL+KuaiLe&display=swap');
+	body {
+		font-family: 'Lato', sans-serif;
+		background-size: cover;
+	}
+
+	.text-shadow {
+		text-shadow: 0.6px 0.6px 1px #adadad;
+	}
+
+	.text-zcool {
+		font-family: 'ZCOOL KuaiLe', sans-serif;
+	}
+
+	.bg-rubber {
+        background-image: url("https://www.transparenttextures.com/patterns/rubber-grip.png");
+    }
+
+	.hidden-scrollbar::-webkit-scrollbar {
+		display: none;
+	}
+
+	.hidden-scrollbar {
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+	}
+</style>

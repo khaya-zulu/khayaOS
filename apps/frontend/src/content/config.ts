@@ -25,6 +25,7 @@ const travelCollection = defineCollection({
     title: z.string(),
     greetings: z.array(z.string()),
     cover: z.string(),
+    isExpandable: z.boolean().optional(),
   }),
 });
 

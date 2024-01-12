@@ -1,6 +1,4 @@
 ---
-    import BlurrableImage from "../components/blurrable-image.astro"
-
     import Twitter from "../components/icons/twitter.astro";
     import Linkedin from "../components/icons/linkedin.astro";
     import Github from "../components/icons/github.astro";
@@ -13,41 +11,10 @@
         github: "https://github.com/khaya-zulu",
         linkedin: "https://www.linkedin.com/in/khaya-zulu-910760153/"
     }
-
-    const { data } = await fetch(`${import.meta.env.PUBLIC_BACKEND_API}/api/graphql`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            query: `
-                {
-                    config {
-                        avatar {
-                            publicUrl
-                        }
-                        avatarBlurUrl
-                        bio
-                        displayEmail
-                        displayName
-                        twitter
-                        github
-                        linkedin
-                    }
-                }
-            `,
-        }),
-    }).then((response) => response.json());
 ---
 
-<!-- TODO: make this slide, from this view to notifications `npx khayaOS chat` -->
 <div class="flex mx-auto rounded-full py-2 px-8 gap-4 items-center border-2 border-[#bfc1c3] shadow-xl window-blur">
-    <BlurrableImage 
-        src={data.config?.avatar?.publicUrl} 
-        srcBlur={data.config?.avatarBlurUrl} 
-        height={56} 
-        width={56} 
-        className="rounded-full"
-        alt="Avatar"
-    />
+    <img src="" alt="" class="w-14 h-14 rounded-full">
     <div>
         <div>{config.displayName}</div>
         <div class="text-sm w-60 truncate">

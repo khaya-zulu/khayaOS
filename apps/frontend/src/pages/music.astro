@@ -1,7 +1,7 @@
 ---
 import { getCollection } from "astro:content"
 
-import Layout from '../layouts/layout.astro';
+import Layout from '~/layouts/layout.astro';
 import Footer from '~/layouts/footer.astro';
 
 import HorizontalList from "~/components/horizontal-list.astro"
@@ -12,7 +12,7 @@ import Spotify from "~/components/spotify-card.astro"
 const music = await getCollection("music")
 ---
 
-<Layout title="khayaOS &#8226; Bio" active="careers">
+<Layout title="khayaOS &#8226; Bio" active="music">
 	<div class="flex-1">
 		<HorizontalList>
 			<Spotify />
@@ -24,6 +24,8 @@ const music = await getCollection("music")
 						title={m.data.title} 
 						subtitle={m.data.subtitle} 
 						render={m.render}
+						href={m.data.externalLink}
+						isExternalLink
 					/>
 				)
 			}

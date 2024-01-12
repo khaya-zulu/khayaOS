@@ -1,0 +1,106 @@
+---
+import Bolt from "./bolt.astro"
+import SidebarButton from "./sidebar-button.astro"
+import KeyboardButton from "./keyboard-button.astro"
+
+import { conditions } from "virtual:os/conditions"
+
+import FakeBrick from "../assets/fake-brick.png"
+
+export type Props = {
+    active: "bio" | "projects" | "travel" | "music" | "notes" | "note-id"
+}
+
+const menuItems = [
+    conditions.isBioEnabled ?  { href: "/", label: "bio" } : null,
+    conditions.isProjectsEnabled ?  { href: "/projects", label: "projects" } : null,
+    conditions.isTravelEnabled ? { href: "/travel", label: "travel" } : null,
+    conditions.isMusicEnabled ? { href: "/music", label: "music" } : null,
+    conditions.isNotesEnabled ?  { href: "/notes", label: "notes" } : null,
+].filter(Boolean)
+
+const { active } = Astro.props
+---
+
+<div class="sidebar rounded-md outline-offset-4 flex w-full">
+    <div class="rounded-md p-[2px] -translate-y-1 flex w-full">
+        <div class="rounded-sm shadow-steal-inner-shadow backdrop-blur-sm flex w-full">
+            <div class="flex p-2 gap-2 w-full" style={`background-image: url("${FakeBrick.src}")`}>
+                <div class="flex flex-col justify-between">
+                    <Bolt />
+                    <Bolt />
+                </div>
+                <div class="flex-1 flex flex-col gap-4 py-8 relative">
+                    {
+                        menuItems.map(({ href, label }) => (
+                            <SidebarButton href={href} isActive={active === label}>{label}</SidebarButton>
+                        ))
+                    }
+                    <div class="absolute w-full" style="bottom: 5%; right: 0;">
+                        <div class="flex flex-col gap-2 items-center">
+                            <div class="flex gap-2 items-center">
+                                <KeyboardButton key="shift">shift</KeyboardButton>
+                                <div id="plus-shift-t">+</div>
+                                <KeyboardButton key="t">t</KeyboardButton>
+                            </div>
+                            <div class="text-zcool">show scrollbar</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col justify-between">
+                    <Bolt />
+                    <Bolt />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .sidebar {
+        background-image: linear-gradient(to right, var(--os-sidebar-border-from), var(--os-sidebar-border-to));
+        color: var(--os-sidebar-text-color);
+    }
+
+    .sidebar > div {
+        background-color: var(--os-sidebar-background-color);
+        border: 1px solid var(--os-sidebar-border);
+    }
+
+    .sidebar > div > div {
+        background-color: var(--os-sidebar-inner-background-color);
+        border: 1px solid var(--os-sidebar-inner-border);
+    }
+    
+    .plus-shift-t {
+        color: white;
+    }
+</style>
+
+<script>
+    const elOverflowXs = document.getElementsByClassName("overflow-x-auto")
+    const elOverflowYs = document.getElementsByClassName("overflow-y-auto")
+
+    const toggleScrollbar = (collection: HTMLCollectionOf<Element>) => {
+        for (let i = 0; i < collection.length; i++) {
+            const el = collection[i]
+            if (el) el.classList.toggle("hidden-scrollbar")
+        }
+    }
+
+    window.addEventListener("toggle-scrollbar", () => {
+        toggleScrollbar(elOverflowXs)
+        toggleScrollbar(elOverflowYs)
+        // toggle scrollbar on x axis
+        for (let i = 0; i < elOverflowXs.length; i++) {
+            const el = elOverflowXs[i]
+            if (el) el.classList.toggle("hidden-scrollbar")
+        }
+
+        // toggle scrollbar on y axis
+        for (let i = 0; i < elOverflowYs.length; i++) {
+            const el = elOverflowXs[i]
+            if (el) el.classList.toggle("hidden-scrollbar")
+        }
+    })
+</script>

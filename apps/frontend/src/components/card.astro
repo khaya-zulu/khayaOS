@@ -1,7 +1,9 @@
 ---
 import type { CollectionEntry } from "astro:content"
 import ArrowUpRight from "~/components/icons/arrow-up-right.astro"
-import Fragment from "./fragment.astro"
+import Img from "~/components/img.astro"
+import X from "~/components/icons/x.astro"
+
 
 export type Props = {
     idx: number
@@ -18,7 +20,7 @@ export type Props = {
 
 const { idx, cover, title, subtitle, render, techstack, href, isExternalLink, isClickDisabled, meta } = Astro.props
 
-const { Content } = await render()
+const { Content } = render ? await render() : { Content: null }
 
 const delayRules = "ease-out delay-0 group-hover:delay-300 group-hover:ease-out"
 
@@ -56,8 +58,8 @@ const Component = isLink ? 'a' : "button"
                     alt="cover image"
                 />
             </div>
-            <div class="card-content hidden opacity-0 px-1 text-left">
-                <Content />
+            <div class="card-content hidden opacity-0 px-1 text-left flex flex-col gap-4 h-[21rem] pr-10 overflow-y-auto">
+                <Content components={{ img: Img }} />
             </div>
         </div>
         <div class="px-1 z-[2] card-header">
@@ -79,7 +81,7 @@ const Component = isLink ? 'a' : "button"
                     ]}
                 >
                     {subtitle}
-                    {isLink && <ArrowUpRight className="w-[0.75rem] h-[0.75rem]" />}
+                    {isLink && isExternalLink && <ArrowUpRight className="w-[0.75rem] h-[0.75rem]" />}
                 </div> : null
             }
             {
@@ -95,57 +97,88 @@ const Component = isLink ? 'a' : "button"
             }
         </div>
     </div>
+    <div class="absolute top-5 right-5 flex gap-2 close-buttons hidden z-[2]" onclick="onCloseClick(this)">
+        <div class="h-4 w-4 rounded-full bg-slate-200" />
+        <div class="h-4 w-4 rounded-full bg-slate-200" />
+
+        <div class="h-4 w-4 rounded-full bg-red-500 flex justify-center items-center">
+            <X className="w-[10px] h-[10px] text-white" />
+        </div>
+    </div>
 </Component>
 
 <script>
-    import { animateEl, animateIn, animateOut, sleep } from "./card"
+    import { sleep } from "~/lib/utils"
+    import { animateIn, animateOut } from "~/lib/card"
+    import { animateEl } from "~/lib/animate"
 
-    const overlay = document.querySelector(".bg-overlay")
-    overlay?.addEventListener("click", () => {
+    const elOverlay = document.querySelector(".bg-overlay")
+    elOverlay?.addEventListener("click", () => {
         // @ts-ignore: todo add the type to window.
         const idx = window.idx
 
         const activeCard = document.getElementById(idx)
-        activeCard?.click()
+        // @ts-ignore
+        activeCard?.querySelector(".close-buttons")?.click()
     })
 
+    // @ts-ignore create global function "onCloseClick"
+    window.onCloseClick = (elCard: HTMLElement) => {
+        const parent = elCard.parentNode as HTMLElement
+        // @ts-ignore: todo add the type to window.
+        window.onClick(parent, true)
+    }
+
     // @ts-ignore create global function "onClick"
-    window.onClick = async (card: HTMLElement) => {
-        const isClickDisabled = card.getAttribute("_isClickDisabled")
+    window.onClick = async (elCard: HTMLElement, isClosing = false) => {
+        const isClickDisabled = elCard.getAttribute("_isClickDisabled")
         if (isClickDisabled) return
 
-        const cardImage = card.querySelector(".card-img")
-        const cardContentContainer = card.querySelector(".card-content-container")
-        const cardHeader = card.querySelector(".card-header");
-        const cardSubtitle = card.querySelector(".card-subtitle")
-        const cardContent = card.querySelector(".card-content")
+        const elCardImage = elCard.querySelector(".card-img")
+        const elCardContentContainer = elCard.querySelector(".card-content-container")
+        const elCardHeader = elCard.querySelector(".card-header");
+        const elCardSubtitle = elCard.querySelector(".card-subtitle")
+        const elCardContent = elCard.querySelector(".card-content")
+        const elBgPaper = elCard.querySelector(".bg-paper")
+        const elCloseButtons = elCard.querySelector(".close-buttons")
 
-        const isClicked = Boolean(+(card.getAttribute("_isClicked") ?? 0))
-        const id = card.getAttribute("id")
+        const isClicked = Boolean(+(elCard.getAttribute("_isClicked") ?? 0))
+
+        if (!isClosing && isClicked) return
+        const id = elCard.getAttribute("id")
 
         if (isClicked) {
-            await animateIn({ card, cardImage, cardContentContainer, cardHeader, cardSubtitle, cardContent })
-            animateEl(overlay, { opacity: 0 }, { duration: 400 }, async () => {
-                overlay?.classList.add("hidden")
-                card.setAttribute("_isClicked", "0")
+            // @ts-ignore: todo add the type to window.
+            window.idx = undefined
 
-                card.classList.remove('z-50')
+            // as the user may click on the overlay.
+            elCard.dispatchEvent(new Event("mouseleave"))
+
+            elCloseButtons?.classList.add("hidden")
+            await animateIn({ elCard, elCardImage, elCardContentContainer, elCardHeader, elCardSubtitle, elCardContent, elBgPaper })
+            animateEl(elOverlay, { opacity: 0 }, { duration: 400 }, async () => {
+                elOverlay?.classList.add("hidden")
+                elCard.setAttribute("_isClicked", "0")
+
+                elCard.classList.remove('z-50')
                 await sleep(100)
-                card?.classList.remove("mr-20");
+                elCard?.classList.remove("mr-20");
             })
         } else {
-            card.classList.add("z-50")
+            elCard.classList.add("z-50")
 
-            await animateOut({ card, cardImage, cardContentContainer, cardHeader, cardSubtitle, cardContent })
+            await animateOut({ elCard, elCardImage, elCardContentContainer, elCardHeader, elCardSubtitle, elCardContent, elBgPaper })
 
             // show the overlay
-            overlay?.classList.remove("hidden")
-            animateEl(overlay, { opacity: 0.5 }, { duration: 400, delay: 450 })
+            elOverlay?.classList.remove("hidden")
+            animateEl(elOverlay, { opacity: 0.5 }, { duration: 400, delay: 450 }, () => {
+                elCloseButtons?.classList.remove("hidden")
+            })
 
             // @ts-ignore: todo add the type to window.
             window.idx = id
 
-            card.setAttribute("_isClicked", "1")
+            elCard.setAttribute("_isClicked", "1")
         }
     }
 </script>

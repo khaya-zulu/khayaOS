@@ -1,0 +1,10 @@
+---
+export type Props = {
+    src: string;
+}
+
+const { src } = Astro.props
+---
+
+<img src={src} class="h-60 object-cover w-full rounded-md" />
+

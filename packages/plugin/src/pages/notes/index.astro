@@ -1,0 +1,35 @@
+---
+import { getCollection } from "astro:content"
+
+import { sortByOrder } from "../../lib/utils"
+
+import Layout from '../../layouts/layout.astro';
+import Footer from '../../layouts/footer.astro';
+
+import HorizontalList from "../../components/horizontal-list.astro"
+import Card from "../../components/card.astro"
+
+const notesCollection = await getCollection("notes")
+const orders = notesCollection.sort(sortByOrder)
+---
+
+<Layout title="khayaOS &#8226; Bio" active="notes">
+	<div class="flex-1">
+		<HorizontalList>
+			{
+				orders?.map((notes, idx) => 
+					<Card 
+						idx={idx} 
+						cover={notes.data.cover} 
+						title={notes.data.title} 
+						subtitle={notes.data.publishedAt.toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' })})} 
+                        href={`/notes/${notes.slug}`}
+						isClickDisabled
+						render={notes.render}
+					/>
+				)
+			}
+		</HorizontalList>
+	</div>
+	<Footer />
+</Layout>

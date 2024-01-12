@@ -1,7 +1,7 @@
 ---
 import { getCollection } from "astro:content"
 
-import Layout from '../layouts/layout.astro';
+import Layout from '~/layouts/layout.astro';
 import Footer from '~/layouts/footer.astro';
 
 import HorizontalList from "~/components/horizontal-list.astro"
@@ -10,7 +10,7 @@ import Card from "~/components/card.astro"
 const travelCollection = await getCollection("travel")
 ---
 
-<Layout title="khayaOS &#8226; Travel" active="careers">
+<Layout title="khayaOS &#8226; Travel" active="travel">
 	<div class="flex-1">
 		<HorizontalList>
 			<div 
@@ -27,8 +27,8 @@ const travelCollection = await getCollection("travel")
 							<div id="next-word" class="text-slate-500 text-sm" />
 						</div>
 
-						<div id="progress-layout" class="h-1 bg-slate-200 w-20 rounded-full overflow-hidden border border-slate-600">
-							<div id="progress" class="h-1 w-0 bg-slate-600" />
+						<div id="progress-layout" class="h-[4px] bg-slate-200 w-20 rounded-full overflow-hidden border border-slate-600">
+							<div id="progress" class="h-[4px] w-0 bg-slate-600" />
 						</div>
 					</div>
 					<div id="wishlist" class="flex flex-col gap-2">
@@ -65,7 +65,7 @@ const travelCollection = await getCollection("travel")
 						title={travel.data.title} 
 						subtitle={travel.data.greetings[0]}
 						render={travel.render}
-						isClickDisabled
+						isClickDisabled={!travel.data.isExpandable}
 						meta={travel.data.greetings.join(",")}
 					/>
 				)
@@ -76,7 +76,8 @@ const travelCollection = await getCollection("travel")
 </Layout>
 
 <script>
-	import { animateEl, sleep } from "../components/card"
+	import { sleep } from "~/lib/utils"
+	import { animateEl } from "~/lib/animate"
 
 	const cards = document.querySelectorAll(".card")
 
@@ -143,6 +144,8 @@ const travelCollection = await getCollection("travel")
 		})
 
 		card.addEventListener("mouseleave", () => {
+			if (window.idx) return // disable if card is clicked
+
 			firstCard?.classList.remove("mr-20")
 			wishlist?.classList.remove("hidden")
 			greetings?.classList.add("hidden")

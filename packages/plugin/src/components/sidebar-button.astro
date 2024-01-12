@@ -1,0 +1,27 @@
+---
+import { Picture } from "astro:assets"
+import Tape from "../assets/tape.png"
+
+export type Props = {
+    href: string
+    isActive: boolean
+}
+
+const { href, isActive } = Astro.props
+---
+
+<a class="relative group" href={href} onclick="window.postMessage('page_change')">
+    <Picture src={Tape} alt="tape" class="h-16 w-full group-hover:rotate-1" />
+    <div class:list={[
+        "absolute h-16 top-0 left-0 w-full justify-center flex items-center text-zcool text-lg",
+        isActive && "sidebar-button"
+    ]}>
+        <slot />
+    </div>
+</a>
+
+<style>
+    .sidebar-button {
+        color: var(--os-sidebar-button-color, #fff);
+    }
+</style>

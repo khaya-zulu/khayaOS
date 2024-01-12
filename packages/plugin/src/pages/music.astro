@@ -1,0 +1,39 @@
+---
+import { getCollection } from "astro:content"
+
+import { sortByOrder } from "../lib/utils"
+
+import Layout from '../layouts/layout.astro';
+import Footer from '../layouts/footer.astro';
+
+import HorizontalList from "../components/horizontal-list.astro"
+import Card from "../components/card.astro"
+
+import Spotify from "../components/spotify-card.astro"
+
+const music = await getCollection("music")
+const ordered = music.sort(sortByOrder)
+---
+
+<Layout title="khayaOS &#8226; Bio" active="music">
+	<div class="flex-1">
+		<HorizontalList>
+			<Spotify />
+			{
+				ordered?.map((m, idx) => 
+					<Card 
+						idx={idx + 1} 
+						cover={m.data.cover} 
+						title={m.data.title} 
+						subtitle={m.data.subtitle} 
+						render={m.render}
+						isExternalLink={Boolean(m.data.externalLink)}
+						href={m.data.externalLink}
+						isClickDisabled
+					/>
+				)
+			}
+		</HorizontalList>
+	</div>
+	<Footer />
+</Layout>

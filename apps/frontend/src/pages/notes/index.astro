@@ -12,7 +12,7 @@ import Card from "~/components/card.astro"
 const notesCollection = await getCollection("notes")
 ---
 
-<Layout title="khayaOS &#8226; Bio" active="careers">
+<Layout title="khayaOS &#8226; Bio" active="notes">
 	<div class="flex-1">
 		<HorizontalList>
 			{
@@ -21,7 +21,7 @@ const notesCollection = await getCollection("notes")
 						idx={idx} 
 						cover={notes.data.cover} 
 						title={notes.data.title} 
-						subtitle={notes.data.publishedAt.toString()} 
+						subtitle={notes.data.publishedAt.toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' })})} 
                         href={`/notes/${notes.slug}`}
 						render={notes.render}
 					/>

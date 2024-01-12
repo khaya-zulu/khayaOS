@@ -1,0 +1,59 @@
+---
+import { getCollection } from "astro:content"
+
+import Layout from '../layouts/layout.astro';
+import Footer from '../layouts/footer.astro';
+
+import { sortByOrder } from "../lib/utils"
+
+import HorizontalList from "../components/horizontal-list.astro"
+import Card from "../components/card.astro"
+
+import { travel } from "virtual:os/travel"
+
+const travelCollection = await getCollection("travel")
+const orders = travelCollection.sort(sortByOrder)
+---
+
+<Layout title="khayaOS &#8226; Travel" active="travel">
+	<div class="flex-1">
+		<HorizontalList>
+			<div 
+				class:list={[
+					"h-[27.5rem] w-[25rem] bg-white rounded-md group shadow-md border-white border-8 p-2 first:ml-10 relative inline-block first-card align-top",
+					"hover:mr-20 transition-all duration-200 delay-0 group-hover:delay-150 group-hover:ease-out",
+				]}
+			>
+				<div class="absolute left-0 top-0 bg-paper w-full h-full" />
+				<div class="flex items-center justify-center h-full card-content-container gap-4 relative">
+					<div id="wishlist" class="flex flex-col gap-2">
+						<div class="text-zcool">Wishlist</div>
+
+						{
+							travel.wishlist.map((item) => (
+								<div class="flex gap-2">
+									<input type="checkbox" checked={item.isChecked} disabled />
+									<div>{item.name}</div>
+								</div>
+							))
+						}
+					</div>
+				</div>
+			</div>
+			{
+				orders?.map((travel, idx) => 
+					<Card 
+						idx={idx + 1} 
+						cover={travel.data.cover} 
+						title={travel.data.title} 
+						subtitle={travel.data.greetings[0]}
+						render={travel.render}
+						isClickDisabled={Boolean(travel.data.isExpandable)}
+						meta={travel.data.greetings.join(",")}
+					/>
+				)
+			}
+		</HorizontalList>
+	</div>
+	<Footer />
+</Layout>

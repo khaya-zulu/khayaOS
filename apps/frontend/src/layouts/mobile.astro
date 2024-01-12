@@ -2,37 +2,18 @@
     import Github from "~/components/icons/github.astro";
     import Linkedin from "~/components/icons/linkedin.astro";
     import Twitter from "~/components/icons/twitter.astro";
-
-    const { data: { config } } = await fetch(`${import.meta.env.PUBLIC_BACKEND_API}/api/graphql`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            query: `
-                {
-                    config {
-                        avatar {
-                            publicUrl
-                        }
-                        bio
-                        displayName
-                        twitter
-                        github
-                        linkedin
-                        location
-                        temperature
-                    }
-                }
-            `,
-        }),
-    }).then((response) => response.json());
 ---
 
 <div class="bg-white bg-grid absolute left-0 top-0 w-full">
     <div class="flex gap-2 items-center">
-        <img src={config.avatar.publicUrl} alt="My profile image" class="h-12 w-12 rounded-full">
+        <img src="" alt="My profile image" class="h-12 w-12 rounded-full">
         <div>
-            <div class="text-primaryDark">{config.displayName}</div>
-            <div class="text-primaryDark text-sm font-semibold">{config.location} ({config.temperature}° C)</div>
+            <div class="text-primaryDark">
+                <!-- {config.displayName} -->
+            </div>
+            <div class="text-primaryDark text-sm font-semibold">
+                <!-- {config.location} ({config.temperature}° C) -->
+            </div>
         </div>
     </div>
     <div class="mt-8 border-l-2 pl-5 border-accentDark">
@@ -40,13 +21,13 @@
     </div>
     
     <div class="flex mt-5 gap-3 justify-end">
-        <a href={config?.twitter} target="_blank" rel="noopener noreferrer" class="hover:opacity-80">
+        <a target="_blank" rel="noopener noreferrer" class="hover:opacity-80">
             <Twitter />
         </a>
-        <a href={config?.linkedin} target="_blank" rel="noopener noreferrer" class="hover:opacity-80">
+        <a target="_blank" rel="noopener noreferrer" class="hover:opacity-80">
             <Linkedin />
         </a>
-        <a href={config?.github} target="_blank" rel="noopener noreferrer" class="hover:opacity-80">
+        <a target="_blank" rel="noopener noreferrer" class="hover:opacity-80">
             <Github />
         </a>
     </div>
